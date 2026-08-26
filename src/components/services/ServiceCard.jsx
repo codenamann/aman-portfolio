@@ -92,10 +92,13 @@ export default function ServiceCard({ service, className = "" }) {
     : "bg-white/[0.04] text-muted border border-border/80 hover:text-foreground hover:border-border";
 
   return (
-    <div ref={targetRef} className="sticky top-100 md:top-120 lg:top-60">
+    <div
+      ref={targetRef}
+      className="sticky top-62 sm:top-100  md:top-120 lg:top-60"
+    >
       <motion.div style={{ rotate, y }}>
         <article
-          className={`relative w-full min-h-60 md:min-h-85 lg:min-h-68 p-4 sm:p-4 rounded-2xl md:rounded-3xl flex flex-col justify-between transition-colors ${containerStyles} ${className}`}
+          className={`relative w-full min-h-80 sm:min-h-60 md:min-h-85 lg:min-h-68 p-4 sm:p-4 rounded-2xl md:rounded-3xl flex flex-col justify-between transition-colors ${containerStyles} ${className}`}
         >
           <div>
             {/* ── Card Header: Icon + Title ─────────────────────────────────────── */}

@@ -22,7 +22,7 @@ export default function Services({
     >
       <div className="relative max-w-5xl mx-auto xl:px-6 flex flex-col lg:flex-row items-start justify-between gap-3 lg:gap-3">
         {/* ── Left Content Column: Heading & Tools ────────────────────────── */}
-        <div className="flex-1 flex sticky top-30 md:top-45 lg:top-60 flex-col gap-10 lg:gap-14">
+        <div className="flex-1 flex sticky top-25 sm:top-30 md:top-45 lg:top-60 flex-col gap-10 lg:gap-14">
           <h2 className="font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.05]">
             What I help
             <br />
