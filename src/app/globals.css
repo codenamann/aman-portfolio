@@ -1,26 +1,134 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colors */
+  --background: #111113;
+  --foreground: #f4f4f5;
+  --accent: #e90c47;
+  --muted: #777777;
+  --border: #262628;
+  --border-muted: #696868;
+  --card: #161618;
+  --surface: #1c1c1f;
+  --white: #ffffff;
+
+  /* ── SECTION HEADING SIZES (Change in this ONE place for all sections) ── */
+  --section-heading-size: 2.25rem;       /* Mobile (<640px) */
+  --section-heading-line-height: 1.05;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 640px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --section-heading-size: 3rem;       /* Tablet / sm (640px+) */
   }
 }
 
+@media (min-width: 768px) {
+  :root {
+    --section-heading-size: 3.75rem;    /* Laptop / md (768px+) */
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-heading-size: 3rem;    /* Desktop / lg (1024px+) */
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --section-heading-size: 3.75rem;    /* Wide Desktop / xl (1280px+) */
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS — declared ONCE here.
+   Tailwind v4 @theme generates both:
+     • Utility classes  →  bg-background, text-accent, border-border, font-display …
+     • CSS custom props →  var(--color-background), var(--color-accent) …
+   Do NOT redeclare these anywhere else.
+───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-background:   var(--background);
+  --color-foreground:   var(--foreground);
+  --color-accent:       var(--accent);
+  --color-muted:        var(--muted);
+  --color-border:       var(--border);
+  --color-border-muted: var(--border-muted);
+  --color-card:         var(--card);
+  --color-surface:      var(--surface);
+  --color-white:        var(--white);
+
+  /* Typography */
+  --font-sans:    var(--font-roboto, ui-sans-serif, system-ui, sans-serif);
+  --font-display: var(--font-space-grotesk, ui-sans-serif, system-ui, sans-serif);
+  --font-script:  var(--font-caveat, cursive);
+  --font-microphone: var(--font-microphone);
+
+  /* Fluid type scale — custom Tailwind text-* utilities */
+  --text-hero:    clamp(5rem, 18vw, 17rem);
+  --text-display: clamp(2.2rem, 6vw, 5rem);
+  --text-section-heading: var(--section-heading-size);
+  --text-section-heading--line-height: var(--section-heading-line-height);
+  --text-xl:      clamp(1.8rem, 4vw, 3.5rem);
+  --text-lg:      clamp(1.2rem, 2.5vw, 2.2rem);
+
+  --animate-marquee: marquee 3s linear infinite;
+  
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   BASE — only what Tailwind preflight doesn't cover
+───────────────────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-background); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 99px; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   COMPONENT UTILITIES
+   Only vanilla CSS that genuinely cannot be expressed as a Tailwind utility.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Service card — CSS hover transform (rotation values are dynamic per card,
+   so the transition lives here and transform is set via inline style) */
+.service-card {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease;
+  will-change: transform;
+}
+.service-card:hover {
+  transform: rotate(0deg) scale(1.04) !important;
+  z-index: 20;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
 }
