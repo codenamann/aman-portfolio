@@ -11,9 +11,9 @@ export default function Projects({ items = defaultProjects }) {
   return (
     <section
       id="projects"
-      className="w-full flex justify-center bg-background border-t border-border py-12 md:py-12 lg:py-19"
+      className="w-full flex justify-center bg-background border-t border-border section-py section-px"
     >
-      <div className="max-w-5xl px-8 lg:px-8 xl:px-6 flex-1">
+      <div className="section-container flex-1">
         {/* ── Section Heading ───────────────────────────────────────────── */}
         <h2 className="font-display font-bold text-section-heading text-foreground tracking-tight mb-8 md:mb-12">
           Latest <span className="text-accent">Projects</span>

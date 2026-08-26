@@ -129,7 +129,7 @@ export default function SocialProof({
         className,
       )}
     >
-      <div className="max-w-5xl px-10 lg:px-10 xl:px-6 mx-auto">
+      <div className="section-container section-px">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-8 md:gap-10 lg:gap-14">
           {/* Review badge */}
           <ReviewBadge />

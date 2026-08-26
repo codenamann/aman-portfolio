@@ -27,10 +27,10 @@ export default function Testimonials({
     <>
       <section
         id="testimonials"
-        className="w-full bg-background px-8 border-t border-border pt-15"
+        className="w-full bg-background border-t border-border pt-[var(--section-py)] section-px"
       >
         {/* ── Section Header ─────────────────────────────────────────────── */}
-        <div className="max-w-5xl mx-auto xl:px-6 mb-12 md:mb-16">
+        <div className="section-container mb-12 md:mb-16">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <h2 className="font-display font-bold lg:w-[60%] xl:w-[70%] text-section-heading text-foreground tracking-tight leading-[1.05]">
               <span>Hear from what </span>
@@ -47,7 +47,7 @@ export default function Testimonials({
         </div>
       </section>
       {/* ── Infinite Marquee Rails ──────────────────────────────────────── */}
-      <div className="flex flex-col gap-5 sm:gap-6 pb-15">
+      <div className="flex flex-col gap-5 sm:gap-6 pb-[var(--section-py)]">
         {/* Client Testimonials Rail (Leftward Marquee) */}
         <InfiniteMarquee direction="left" speed={45} gap="gap-5 sm:gap-6">
           {items.map((item) => (

@@ -11,9 +11,9 @@ export default function About({ content = aboutData }) {
   return (
     <section
       id="about"
-      className="w-full bg-background border-t border-border py-12 px-8 md:px-8 lg:px-8"
+      className="w-full bg-background border-t border-border section-py section-px"
     >
-      <div className="max-w-5xl xl:px-6 mx-auto">
+      <div className="section-container">
         {/* ── Section Heading ───────────────────────────────────────────── */}
         <h2 className="font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.05] mb-12 md:mb-16">
           {content.heading.lineOne}

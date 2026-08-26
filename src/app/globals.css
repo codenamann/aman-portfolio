@@ -15,29 +15,42 @@
   /* ── SECTION HEADING SIZES (Change in this ONE place for all sections) ── */
   --section-heading-size: 2.25rem;       /* Mobile (<640px) */
   --section-heading-line-height: 1.05;
+
+  /* ── SECTION PADDING & CONTAINER (Change in this ONE place for all sections) ── */
+  --section-py: 3.75rem;                 /* Vertical padding on mobile (60px) */
+  --section-px: 1rem;                    /* Horizontal padding on mobile (16px) */
+  --container-max-w: 64rem;              /* Container max-width (5xl = 1024px) */
 }
 
 @media (min-width: 640px) {
   :root {
     --section-heading-size: 3rem;       /* Tablet / sm (640px+) */
+    --section-py: 3.75rem;
+    --section-px: 1.5rem;                /* sm px (24px) */
   }
 }
 
 @media (min-width: 768px) {
   :root {
     --section-heading-size: 3.75rem;    /* Laptop / md (768px+) */
+    --section-py: 4.5rem;                /* md py (72px) */
+    --section-px: 2rem;                  /* md px (32px) */
   }
 }
 
 @media (min-width: 1024px) {
   :root {
-    --section-heading-size: 3rem;    /* Desktop / lg (1024px+) */
+    --section-heading-size: 3rem;       /* Desktop / lg (1024px+) */
+    --section-py: 3.75rem;               /* lg py (60px) */
+    --section-px: 2rem;                  /* lg px (32px) */
   }
 }
 
 @media (min-width: 1280px) {
   :root {
     --section-heading-size: 3.75rem;    /* Wide Desktop / xl (1280px+) */
+    --section-py: 3.75rem;               /* xl py (60px) */
+    --section-px: 1.5rem;                /* xl px (24px) */
   }
 }
 
@@ -119,6 +132,31 @@ body {
    COMPONENT UTILITIES
    Only vanilla CSS that genuinely cannot be expressed as a Tailwind utility.
 ───────────────────────────────────────────────────────────────────────────── */
+
+/* Unified Section Layout Utilities */
+@utility section-padding {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+  padding-left: var(--section-px);
+  padding-right: var(--section-px);
+}
+
+@utility section-py {
+  padding-top: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+@utility section-px {
+  padding-left: var(--section-px);
+  padding-right: var(--section-px);
+}
+
+@utility section-container {
+  max-width: var(--container-max-w, 64rem);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* Service card — CSS hover transform (rotation values are dynamic per card,
    so the transition lives here and transform is set via inline style) */

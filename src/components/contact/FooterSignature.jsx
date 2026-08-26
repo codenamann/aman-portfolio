@@ -14,7 +14,7 @@ export default function FooterSignature({ text = "MR. AMAN", className = "" }) {
       )}
     >
       <h2
-        className="font-display font-black text-accent uppercase tracking-tighter leading-[0.75] text-[5rem] md:text-[10rem] lg:text-[13rem] xl:text-[13.4rem] w-full text-center sm:text-left break-normal"
+        className="font-display font-black text-accent uppercase tracking-tighter leading-[0.75] text-[3.9rem] md:text-[9.6rem] lg:text-[13rem] xl:text-[13.9rem] text-center sm:text-left break-normal"
         style={{ letterSpacing: "-0.04em" }}
       >
         {text}

@@ -18,9 +18,9 @@ export default function FAQSection({
   return (
     <section
       id="faqs"
-      className={`w-full bg-background border-t border-border py-12 px-8 md:px-8 lg:px-8 ${className}`}
+      className={`w-full bg-background border-t border-border section-py section-px ${className}`}
     >
-      <div className="max-w-5xl mx-auto xl:px-6">
+      <div className="section-container">
         <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
           {/* ── Left Column: Heading + Accordion ───────────────────────────── */}
           <div className="w-full lg:w-[58%] flex flex-col">

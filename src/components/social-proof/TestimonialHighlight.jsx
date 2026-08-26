@@ -82,23 +82,21 @@ export default function TestimonialHighlight({
   return (
     <section
       aria-label="Quote highlight"
-      className={`min-h-fit bg-background border-t border-border py-18 md:py-19 ${className}`}
+      className={`min-h-fit bg-background border-t border-border section-py section-px ${className}`}
     >
-      <div className="w-full px-8 md:px-20">
-        <div className="max-w-3xl mx-auto flex flex-col gap-6 items-center text-center">
-          {/* ── Main Quote ─────────────────────────────────────────────────── */}
-          <blockquote className="font-sans font-normal text-xl sm:text-2xl md:text-3xl lg:text-[1.8rem] text-foreground/75 leading-none md:leading-normal tracking-tight max-w-5xl">
-            {formattedQuote}
-          </blockquote>
+      <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 items-center text-center">
+        {/* ── Main Quote ─────────────────────────────────────────────────── */}
+        <blockquote className="font-sans font-normal text-xl sm:text-2xl md:text-3xl lg:text-[1.8rem] text-foreground/75 leading-none md:leading-normal tracking-tight max-w-5xl">
+          {formattedQuote}
+        </blockquote>
 
-          {/* ── Attribution Block ─────────────────────────────────────────── */}
-          <QuoteAttribution
-            author={author}
-            role={role}
-            company={company}
-            avatar={avatar}
-          />
-        </div>
+        {/* ── Attribution Block ─────────────────────────────────────────── */}
+        <QuoteAttribution
+          author={author}
+          role={role}
+          company={company}
+          avatar={avatar}
+        />
       </div>
     </section>
   );

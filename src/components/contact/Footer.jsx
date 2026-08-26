@@ -21,9 +21,9 @@ export default function Footer({ data = footerData, className = "" }) {
   return (
     <footer
       id="contact"
-      className={`w-full bg-background border-t border-border flex justify-center px-8 py-12 md:py-15`}
+      className={`w-full bg-background border-t border-border flex justify-center section-py section-px`}
     >
-      <div className={`max-w-5xl xl:px-6 flex flex-col ${className}`}>
+      <div className={`section-container flex flex-col ${className}`}>
         {/* ── Main Headline with Vertical Rotating Word ──────────────────── */}
         <h2 className="flex flex-col gap-2 font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.08]">
           <div className="flex gap-5">

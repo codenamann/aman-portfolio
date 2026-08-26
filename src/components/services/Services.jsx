@@ -18,9 +18,9 @@ export default function Services({
   return (
     <section
       id="services"
-      className="w-full bg-background border-t border-border py-12 md:py-18 lg:py-15 xl:py-15 px-8 sm:px-6 md:px-8 lg:px-8"
+      className="w-full bg-background border-t border-border section-py section-px"
     >
-      <div className="relative max-w-5xl mx-auto xl:px-6 flex flex-col lg:flex-row items-start justify-between gap-3 lg:gap-3">
+      <div className="relative section-container flex flex-col lg:flex-row items-start justify-between gap-3 lg:gap-3">
         {/* ── Left Content Column: Heading & Tools ────────────────────────── */}
         <div className="flex-1 flex sticky top-25 sm:top-30 md:top-45 lg:top-60 flex-col gap-10 lg:gap-14">
           <h2 className="font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.05]">
