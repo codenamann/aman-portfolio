@@ -1,59 +1,22 @@
 "use client";
 import React, { useRef } from "react";
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  CalculatorIcon,
-  Layers01Icon,
-  ShapesIcon,
-  PackageIcon,
-  WebDesign01Icon,
-} from "@hugeicons/core-free-icons";
+import { Video, Sparkles, Palette, Music, Film } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
 
 function ServiceIcon({ name, isAccent }) {
   const iconColor = isAccent ? "text-white" : "text-accent";
 
   switch (name) {
-    case "strategy":
-      return (
-        <HugeiconsIcon
-          icon={CalculatorIcon}
-          size={28}
-          className={`shrink-0 ${iconColor}`}
-        />
-      );
-    case "branding":
-      return (
-        <HugeiconsIcon
-          icon={Layers01Icon}
-          size={28}
-          className={`shrink-0 ${iconColor}`}
-        />
-      );
-    case "uiux":
-      return (
-        <HugeiconsIcon
-          icon={ShapesIcon}
-          size={28}
-          className={`shrink-0 ${iconColor}`}
-        />
-      );
-    case "packaging":
-      return (
-        <HugeiconsIcon
-          icon={PackageIcon}
-          size={28}
-          className={`shrink-0 ${iconColor}`}
-        />
-      );
-    case "digital":
-      return (
-        <HugeiconsIcon
-          icon={WebDesign01Icon}
-          size={28}
-          className={`shrink-0 ${iconColor}`}
-        />
-      );
+    case "shortform":
+      return <Video size={28} className={`shrink-0 ${iconColor}`} />;
+    case "motion":
+      return <Sparkles size={28} className={`shrink-0 ${iconColor}`} />;
+    case "color":
+      return <Palette size={28} className={`shrink-0 ${iconColor}`} />;
+    case "sound":
+      return <Music size={28} className={`shrink-0 ${iconColor}`} />;
+    case "brand":
+      return <Film size={28} className={`shrink-0 ${iconColor}`} />;
     default:
       return (
         <div
@@ -94,7 +57,7 @@ export default function ServiceCard({ service, className = "" }) {
   return (
     <div
       ref={targetRef}
-      className="sticky top-62 sm:top-100  md:top-120 lg:top-60"
+      className="sticky top-62 sm:top-100 md:top-120 lg:top-60"
     >
       <motion.div style={{ rotate, y }}>
         <article

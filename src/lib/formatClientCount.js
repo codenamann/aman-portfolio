@@ -1,20 +1,21 @@
 /**
- * Formats a numeric count into an editorial client-count bucket.
+ * Formats a numeric count or handles string count inputs for the client-count badge.
  *
- * Rules:
- *   - Numbers between 100 and 149 (or <150) format to "99+ Happy clients"
- *   - Numbers 150 and above round down to nearest 50 bucket (e.g. 150+, 200+, 250+)
- *
- * @param {number} count - Numeric client count
+ * @param {number|string} count - Numeric client count or pre-formatted string (e.g. "20+")
  * @returns {string} - Formatted display string
  */
 export function formatClientCount(count) {
+  if (typeof count === "string") {
+    // If it's already a formatted string, just append "Happy clients"
+    return `${count} Happy clients`;
+  }
+
   if (typeof count !== "number" || isNaN(count)) {
-    return "99+ Happy clients";
+    return "20+ Happy clients";
   }
 
   if (count < 150) {
-    return "99+ Happy clients";
+    return "20+ Happy clients";
   }
 
   const bucket = Math.floor(count / 50) * 50;

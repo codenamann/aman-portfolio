@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
+import { AnimatePresence, motion } from "motion/react";
 
 /**
- * Reusable, accessible FAQ item component
+ * Reusable, accessible FAQ item component with smooth accordion animation
  */
 export default function FAQItem({
   item,
@@ -43,26 +46,58 @@ export default function FAQItem({
           </h3>
         </div>
 
-        {/* Plus / Minus Toggle Icon */}
+        {/* Plus / Minus Morphing Toggle Icon */}
         <span
-          className="text-foreground/70 group-hover:text-foreground text-xl sm:text-2xl font-light leading-none shrink-0 w-6 h-6 flex items-center justify-center transition-colors"
+          className="text-foreground/70 group-hover:text-foreground shrink-0 w-6 h-6 flex items-center justify-center relative"
           aria-hidden="true"
         >
-          {isOpen ? "−" : "+"}
+          {/* Horizontal line */}
+          <span
+            className={`absolute w-3.5 h-[1.5px] bg-current transition-transform duration-300 ease-out ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+          {/* Vertical line */}
+          <span
+            className={`absolute h-3.5 w-[1.5px] bg-current transition-all duration-300 ease-out ${
+              isOpen ? "rotate-90 opacity-0" : ""
+            }`}
+          />
         </span>
       </button>
 
       {/* ── Accordion Answer Region ────────────────────────────────────── */}
-      {isOpen && (
-        <div
-          id={controlId}
-          role="region"
-          aria-labelledby={headerId}
-          className="px-5 sm:px-6 pb-5 sm:pb-6 pt-1 text-sm sm:text-[15px] text-foreground/75 leading-relaxed font-normal"
-        >
-          <p>{item.answer}</p>
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            id={controlId}
+            role="region"
+            aria-labelledby={headerId}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{
+              height: "auto",
+              opacity: 1,
+              transition: {
+                height: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+                opacity: { duration: 0.25, delay: 0.05, ease: "linear" },
+              },
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+              transition: {
+                height: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+                opacity: { duration: 0.15, ease: "linear" },
+              },
+            }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-1 text-sm sm:text-[15px] text-foreground/75 leading-relaxed font-normal">
+              <p>{item.answer}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

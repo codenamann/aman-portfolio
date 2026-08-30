@@ -18,10 +18,10 @@ export const aboutData = {
   },
 
   paragraphs: [
-    "I started my journey with graphic design, exploring visuals, layouts, and creative ideas. Over the past 5 years, I’ve worked across different types of design, gradually understanding how everything connects and works together.",
-    "With time, my focus shifted from just making designs to communicating ideas clearly. That’s when I began to see myself as a visual communicator, not just a designer.",
-    "Now, I’m learning UI UX to understand how design works in real use. It’s helping me think beyond visuals and focus more on how people interact and experience things.",
-    "My goal is to keep growing by combining my background in graphic design with UI UX, and building work that feels clear, useful, and meaningful.",
+    "I started my journey with graphic design, exploring visuals, layouts, and creative ideas. It was where I first developed an interest in creating and expressing ideas through design.",
+    "Over time, I became increasingly interested in video editing and motion. Moving beyond static visuals gave me a new way to experiment with movement, pacing, and visual expression.",
+    "Through video and motion, I found a different way to approach storytelling. It allowed me to combine different elements and create work that could communicate an idea in a more dynamic and engaging way.",
+    "Now, I’m exploring AI-powered visuals and bringing together design, editing, motion, and storytelling. I’m continuing to experiment with these different forms of creativity to create work that feels creative, clear, and engaging.",
   ],
 
   signature: person.signature,

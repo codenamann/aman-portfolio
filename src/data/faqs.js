@@ -8,37 +8,37 @@ export const faqsData = [
     id: "faq-1",
     question: "How do we get started?",
     answer:
-      "We start with a quick discussion where you share your idea, goals, and what you need. From there, I suggest the right approach and next steps.",
+      "We start with a quick call where you share your video, goals, and platform (Reels, Shorts, YouTube, etc.). From there, I'll suggest the right editing approach and timeline for your project.",
   },
   {
     id: "faq-2",
-    question: "What is your typical design process?",
+    question: "What is your typical editing process?",
     answer:
-      "We begin with research and strategy, followed by concepts and iterations. Once the direction is locked, we build the final deliverables and guidelines.",
+      "I begin by reviewing the raw footage and understanding the message you want to land. Then I structure the story, cut for pacing, add sound design and color, and layer in motion graphics or captions where they'll boost retention — before sending you a first draft for feedback.",
   },
   {
     id: "faq-3",
-    question: "Will I be involved in the design process?",
+    question: "Will I be involved in the editing process?",
     answer:
-      "Absolutely. Collaboration is key. You'll be involved at every milestone with regular check-ins, asynchronous video updates, and structured feedback sessions.",
+      "Yes. I usually share a rough cut first so you can flag anything before I move to the final polish — color, sound mix, and export.",
   },
   {
     id: "faq-4",
     question: "How many changes can I request?",
     answer:
-      "I include 2–3 structured revision rounds for each milestone to ensure everything is refined to perfection without slowing down momentum.",
+      "I offer up to [2] rounds of revisions per project . Beyond that, additional revisions can be discussed based on scope.",
   },
   {
     id: "faq-5",
-    question: "Do you only design, or also help with ideas?",
+    question: "Do you only edit, or also help with ideas?",
     answer:
-      "I work as a strategic creative partner. Beyond visual execution, I help shape narrative direction, positioning, and overall experience thinking.",
+      "Both. I've written and structured Reel scripts and content calendars for brands, not just edited footage — so I can help shape the concept and pacing before the edit even starts, not just execute a raw cut.",
   },
   {
     id: "faq-6",
     question: "How long does a typical project take to complete?",
     answer:
-      "Most projects take between 2 to 6 weeks depending on scope, deliverables, and feedback turnaround. A clear timeline is always set upfront.",
+      "Turnaround depends on length and complexity — a short-form Reel or Short usually takes [ 1-2 days], while a longer brand video takes [4-5 days]. I'll confirm a timeline once I see the raw footage.",
   },
 ];
 
