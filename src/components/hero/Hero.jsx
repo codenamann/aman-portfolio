@@ -1,6 +1,7 @@
 import Link from "@/components/ui/Link";
 import SocialProof from "@/components/social-proof/SocialProof";
 import { person } from "@/data/person";
+import HeroFace from "./HeroFace";
 
 export default function Hero({
   tagline = person.tagline,
@@ -40,9 +41,7 @@ export default function Hero({
       {/* ── Client Proof & Brand Logos at bottom of Hero ─────────────── */}
       <SocialProof className="" />
 
-      <div className="absolute top-60 md:top-35 lg:bottom-5 xl:bottom-25 w-80 md:w-80 lg:w-110 xl:w-119 left-1/2 -translate-x-1/2 ">
-        <img src="/bitmoji-face.png" alt="bitmoji" className="w-full h-auto" />
-      </div>
+      <HeroFace />
     </section>
   );
 }

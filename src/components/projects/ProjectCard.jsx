@@ -197,10 +197,12 @@ export default function ProjectCard({
 
           {/* Bottom Card Caption */}
           <div className="absolute bottom-4 inset-x-4 flex flex-col gap-1 pointer-events-none">
-            <h4 className="font-display font-bold text-base sm:text-lg text-foreground leading-snug group-hover:text-accent transition-colors">
+            <h4 className="font-display font-bold text-sm md:text-[16px] lg:text-[20px] text-foreground leading-snug group-hover:text-accent transition-colors line-clamp-1">
               {project.title}
             </h4>
-            <p className="text-xs text-muted/80">{project.category}</p>
+            <p className="text-xs text-muted/80 line-clamp-1">
+              {project.category}
+            </p>
           </div>
         </div>
       </article>

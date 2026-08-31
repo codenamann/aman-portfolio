@@ -28,13 +28,15 @@ export default function SocialProof({
           />
 
           {/* Reusable, high-performance marquee */}
-          <div className="min-w-0 flex-1 overflow-hidden">
+          <div className="relative min-w-0 flex-1 overflow-hidden">
+            <div className="pointer-events-none absolute left-0 top-0 h-full z-10 w-20 bg-linear-to-r from-background to-transparent " />
             <InfiniteMarquee
               items={items}
-              speed={140}
+              speed={100}
               gap="gap-6 sm:gap-8"
               pauseOnHover={false}
             />
+            <div className="absolute pointer-events-none z-10 h-full w-20 top-0 right-0 bg-linear-to-l from-background to-transparent" />
           </div>
         </div>
       </div>

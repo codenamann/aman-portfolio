@@ -23,7 +23,7 @@ export default function Navbar({
       >
         {/* Top row: logo + hamburger */}
         <div className="flex w-full md:w-fit justify-between">
-          <a href="#" className="flex items-center gap-2.5 group">
+          <a href="/" className="flex items-center gap-2.5 group">
             <div className="w-7.5 h-7.5 rounded-full overflow-hidden shrink-0 ring-1 ring-white/10">
               <Image
                 src={brand.avatar}
