@@ -176,11 +176,23 @@ export const projects = [
 ];
 
 /**
- * Curated projects displayed on the homepage: Exactly 4 long-form videos
+ * Curated 4 vertical Shorts for homepage spotlight (only where featured !== false)
  */
-export const featuredProjects = projects
-  .filter((p) => p.format === "long-form")
+export const featuredShorts = projects
+  .filter((p) => p.featured !== false && (p.format === "short" || p.format === "reel"))
   .slice(0, 4);
+
+/**
+ * Curated 4 long-form videos for homepage (only where featured !== false)
+ */
+export const featuredLongForm = projects
+  .filter((p) => p.featured !== false && p.format === "long-form")
+  .slice(0, 4);
+
+/**
+ * Default featured projects on the homepage (4 vertical shorts)
+ */
+export const featuredProjects = featuredShorts;
 
 /**
  * Filter categories available on the Work Archive page

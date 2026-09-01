@@ -34,7 +34,7 @@ export default function CursorBall() {
 
   return (
     <motion.div
-      className="fixed w-4 h-4 rounded-full bg-accent z-[9999] pointer-events-none mix-blend-exclusion"
+      className="hidden lg:block fixed w-4 h-4 rounded-full bg-accent z-[9999] pointer-events-none mix-blend-exclusion"
       style={{
         x: xOffset,
         y: yOffset,
