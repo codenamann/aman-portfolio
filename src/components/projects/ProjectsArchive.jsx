@@ -53,9 +53,9 @@ export default function ProjectsArchive({ initialProjects = allProjects }) {
       <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[160px] pointer-events-none -z-10" />
 
-      <div className="section-container section-px flex flex-col gap-20 md:gap-20">
+      <div className="section-container section-px flex flex-col gap-18">
         {/* ── High-Impact Page Header ──────────────────────────────────────── */}
-        <div className="flex flex-col gap-6 md:gap-8 border-b border-border/50 pb-12 md:pb-16">
+        <div className="flex flex-col gap-6 md:gap-8 border-b border-border/50 py-12 md:py-20">
           <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
             <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground tracking-tighter leading-[0.88] select-none">
               SELECTED
