@@ -8,6 +8,21 @@
  */
 export const projects = [
   {
+    id: "how-anime-shaped-my-life",
+    title: "How Anime Shaped My Life",
+    subtitle: "Visual Montage & Personal Narrative",
+    category: "Anime & Storytelling Edit",
+    client: "aman.mp4",
+    year: "2025",
+    duration: "00:40",
+    tools: ["After Effects", "Premiere Pro"],
+    platform: "youtube",
+    format: "short",
+    videoUrl: "https://youtube.com/shorts/POwNFhbu21M?si=v0U8yLfSW8cR73ba",
+    featured: true,
+    description: "Visual narrative short exploring personal inspiration, creative storytelling, and dynamic pacing through anime motion.",
+  },
+  {
     id: "gaming-edit-intro",
     title: "Gaming Edit Intro",
     subtitle: "High-Energy Montage & SFX Mix",
@@ -125,7 +140,7 @@ export const projects = [
     platform: "youtube",
     format: "short",
     videoUrl: "https://youtube.com/shorts/2GqPSviv6cE?si=se_2AHAqnlo7-2Bg",
-    featured: true,
+    featured: false,
     description: "Smooth multi-cam podcast highlight clip showcasing dynamic camera switching, lower thirds, and B-roll integration.",
   },
   {
@@ -170,7 +185,7 @@ export const projects = [
     platform: "youtube",
     format: "short",
     videoUrl: "https://youtube.com/shorts/HVHzhDXBdk0?si=8Zaqzf-u8g1D-jni",
-    featured: true,
+    featured: false,
     description: "Kinetic typography layout and text motion sequence synced precisely to audio transients.",
   },
 ];
