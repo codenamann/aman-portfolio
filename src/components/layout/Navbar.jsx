@@ -4,7 +4,6 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { person } from "@/data/person";
 import { siteConfig } from "@/data/site";
 import { Menu, X, Calendar, Mail, ArrowRight, ChevronDown } from "lucide-react";
 import { InstagramIcon } from "hugeicons-react";
@@ -12,39 +11,61 @@ import { FaYoutube } from "react-icons/fa6";
 import ContactDropdown from "./ContactDropdown";
 
 export default function Navbar({
-  brand = person,
+  brand,
   links = siteConfig.navLinks,
 }) {
   const [open, setOpen] = useState(false);
   const [showMobileContact, setShowMobileContact] = useState(false);
   const pathname = usePathname();
 
+  const activeBrand = brand || {};
+  const displayName = activeBrand.displayName || activeBrand.name || "Aman";
+  const avatar = activeBrand.avatar || activeBrand.image || "/passport-picture.png";
+
+  const instagramUrl =
+    activeBrand.socialLinks?.find((s) => s.platform === "instagram")?.url ||
+    activeBrand.instagram?.href ||
+    activeBrand.instagramUrl ||
+    "";
+
+  const youtubeUrl =
+    activeBrand.socialLinks?.find((s) => s.platform === "youtube")?.url ||
+    activeBrand.youtube?.href ||
+    activeBrand.youtubeUrl ||
+    "";
+
+  const emailValue =
+    typeof activeBrand.email === "string"
+      ? activeBrand.email
+      : activeBrand.email?.value || activeBrand.email?.href?.replace("mailto:", "") || "";
+
+  const bookingUrl =
+    activeBrand.bookingUrl || activeBrand.call?.href || "";
+
   const contactOptions = [
-    {
+    bookingUrl && {
       id: "call",
       label: "Book a call",
-      href: person.call?.href || "https://cal.com",
+      href: bookingUrl,
       icon: Calendar,
       isExternal: true,
     },
-    {
+    instagramUrl && {
       id: "instagram",
       label: "Message on Instagram",
-      href:
-        person.instagram?.dmHref ||
-        person.instagram?.href ||
-        "https://www.instagram.com/amann.createss?igsi=eWpkbGR6YjlzYzg=",
+      href: instagramUrl,
       icon: InstagramIcon,
       isExternal: true,
     },
-    {
+    emailValue && {
       id: "email",
       label: "Email",
-      href: person.email?.href || "mailto:shrivastavaaman176@gmail.com",
+      href: `mailto:${emailValue}`,
       icon: Mail,
       isExternal: false,
     },
-  ];
+  ].filter(Boolean);
+
 
   const handleCloseMobile = () => {
     setOpen(false);
@@ -74,8 +95,8 @@ export default function Navbar({
           >
             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-1 ring-white/15 transition-transform group-hover:scale-105">
               <Image
-                src={brand.avatar}
-                alt={brand.displayName || brand.name}
+                src={avatar}
+                alt={displayName}
                 width={32}
                 height={32}
                 className="w-full h-full object-cover"
@@ -83,7 +104,7 @@ export default function Navbar({
             </div>
 
             <span className="font-sans font-bold text-sm sm:text-base text-foreground tracking-tight">
-              {brand.displayName || brand.name}
+              {displayName}
             </span>
           </Link>
 
@@ -133,9 +154,9 @@ export default function Navbar({
           {/* Social Profile Buttons */}
           <div className="flex items-center gap-2">
             {/* Instagram Button */}
-            {brand.instagram?.href && (
+            {instagramUrl && (
               <a
-                href={brand.instagram.href}
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aman on Instagram"
@@ -146,9 +167,9 @@ export default function Navbar({
             )}
 
             {/* YouTube Button */}
-            {brand.youtube?.href && (
+            {youtubeUrl && (
               <a
-                href={brand.youtube.href}
+                href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aman on YouTube"
@@ -160,7 +181,7 @@ export default function Navbar({
           </div>
 
           {/* Contact / Book Dropdown Accordion Component (Desktop) */}
-          <ContactDropdown buttonLabel="BOOK" />
+          <ContactDropdown brand={activeBrand} buttonLabel="BOOK" />
         </div>
 
         {/* Expandable Mobile Navigation Menu (Inside Navbar) */}
@@ -253,9 +274,9 @@ export default function Navbar({
             <div className="flex items-center justify-between pt-3 border-t border-white/10">
               {/* Social Icons on Mobile */}
               <div className="flex items-center gap-2.5">
-                {brand.instagram?.href && (
+                {instagramUrl && (
                   <a
-                    href={brand.instagram.href}
+                    href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"
@@ -264,9 +285,9 @@ export default function Navbar({
                     <InstagramIcon size={15} className="shrink-0" />
                   </a>
                 )}
-                {brand.youtube?.href && (
+                {youtubeUrl && (
                   <a
-                    href={brand.youtube.href}
+                    href={youtubeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="YouTube"

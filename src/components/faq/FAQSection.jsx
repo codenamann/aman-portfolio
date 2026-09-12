@@ -3,18 +3,18 @@
 import React from "react";
 import FAQAccordion from "./FAQAccordion";
 import DiscoveryCTA from "./DiscoveryCTA";
-import { faqsData, discoveryCTAData } from "@/data/faqs";
 
 /**
  * FAQSection Component
- *
- * Combines the left-hand scrollable FAQ accordion and right-hand CSS sticky Discovery CTA card.
  */
 export default function FAQSection({
-  faqs = faqsData,
-  cta = discoveryCTAData,
+  faqsData,
+  profile,
   className = "",
 }) {
+  const activeFaqs = faqsData?.faqs || [];
+  const activeCTA = faqsData?.cta || null;
+
   return (
     <section
       id="faqs"
@@ -28,11 +28,11 @@ export default function FAQSection({
               FAQs
             </h2>
 
-            <FAQAccordion items={faqs} />
+            <FAQAccordion items={activeFaqs} />
           </div>
 
           {/* ── Right Column: Sticky Discovery CTA Card ─────────────────────── */}
-          <DiscoveryCTA cta={cta} />
+          {activeCTA && <DiscoveryCTA cta={activeCTA} profile={profile} />}
         </div>
       </div>
     </section>

@@ -1,14 +1,11 @@
 import Image from "next/image";
-import { defaultQuote } from "@/data/quote";
 
 /**
  * Renders the author / person attribution block.
- * Adapts based on whether an avatar, role, or company is present.
  */
 function QuoteAttribution({ author, role, company, avatar }) {
   if (!author) return null;
 
-  // Build subtitle from role and company if provided
   let subtitle = "";
   if (role && company) {
     subtitle =
@@ -19,7 +16,6 @@ function QuoteAttribution({ author, role, company, avatar }) {
     subtitle = role || company || "";
   }
 
-  // If avatar is provided, render avatar + text side-by-side
   if (avatar) {
     return (
       <div className="flex items-center gap-3 text-left select-none">
@@ -47,7 +43,6 @@ function QuoteAttribution({ author, role, company, avatar }) {
     );
   }
 
-  // If no avatar is provided (e.g. self-authored personal philosophy), render clean centered attribution
   return (
     <div className="flex flex-col items-center text-center select-none">
       <div className="font-display font-bold text-sm sm:text-base text-foreground tracking-tight">
@@ -60,19 +55,27 @@ function QuoteAttribution({ author, role, company, avatar }) {
 
 /**
  * Reusable, content-driven Quote / Credibility Highlight Section.
- * Supports both self-authored statements and client testimonials.
- *
- * @param {Object} props
- * @param {Object} [props.content] - Quote data object (quote, author, role, company, avatar, type)
- * @param {string} [props.className] - Additional container classes
  */
 export default function TestimonialHighlight({
-  content = defaultQuote,
+  quote: quoteProp,
+  content,
+  profile,
   className = "",
 }) {
-  const { quote, author, role, company, avatar } = content;
+  const activeContent = content || quoteProp;
+  if (!activeContent || !activeContent.quote) {
+    return null;
+  }
 
-  // Format quote with curly quotation marks if not already included
+  const quote = activeContent.quote;
+  const author = activeContent.author || profile?.name || "";
+  const role = activeContent.role || profile?.role || profile?.subtitle || "";
+  const company = activeContent.company || "";
+  const avatar =
+    activeContent.type === "self" || !activeContent.author
+      ? profile?.avatar || activeContent.avatar || ""
+      : activeContent.avatar || "";
+
   const formattedQuote = quote
     ? quote.startsWith("“") || quote.startsWith('"')
       ? quote
@@ -85,12 +88,10 @@ export default function TestimonialHighlight({
       className={`min-h-fit bg-background border-t border-border section-py section-px ${className}`}
     >
       <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 items-center text-center">
-        {/* ── Main Quote ─────────────────────────────────────────────────── */}
         <blockquote className="font-sans font-normal text-xl sm:text-2xl md:text-3xl lg:text-[1.8rem] text-foreground/75 leading-none md:leading-normal tracking-tight max-w-5xl">
           {formattedQuote}
         </blockquote>
 
-        {/* ── Attribution Block ─────────────────────────────────────────── */}
         <QuoteAttribution
           author={author}
           role={role}
@@ -102,5 +103,4 @@ export default function TestimonialHighlight({
   );
 }
 
-// Named alias export for convenience
 export { TestimonialHighlight as QuoteHighlight };

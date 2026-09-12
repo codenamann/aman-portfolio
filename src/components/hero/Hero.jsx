@@ -1,15 +1,15 @@
 import Link from "@/components/ui/Link";
 import SocialProof from "@/components/social-proof/SocialProof";
-import { person } from "@/data/person";
 import HeroFace from "./HeroFace";
 
 export default function Hero({
-  tagline = person.tagline,
+  tagline,
   ctaText = "Book a call with me",
   ctaHref = "#contact",
+  socialProofData,
 }) {
   return (
-    <section className=" w-full pt-30 sm:pt-28 md:pt-28 bg-background flex flex-col justify-between items-center">
+    <section className="w-full pt-30 sm:pt-28 md:pt-28 bg-background flex flex-col justify-between items-center">
       <div className="max-w-252 pb-12 md:pb-18 lg:pb-22 px-6 sm:px-8 md:px-9 lg:px-10 xl:px-4 flex flex-col gap-80 md:gap-6 lg:gap-10 w-full flex-1 justify-center">
         {/* ── Headline ──────────────────────────────────────────────────── */}
         <h1 className="flex flex-col justify-center items-center select-none">
@@ -24,22 +24,24 @@ export default function Hero({
 
         {/* ── Bottom bar ────────────────────────────────────────────────── */}
         <div className="max-w-5xl mx-auto w-full px-1 sm:px-0 flex flex-col sm:flex-row items-center justify-between gap-6">
-          {/* Badge + tagline */}
+          {/* Tagline */}
           <div className="w-full md:w-64">
-            <p className="text-center md:text-left md:text-balance font-sans font-normal text-[1.1rem] md:text-[1.25rem] leading-[1.3] text-foreground/80">
-              {tagline}
-            </p>
+            {tagline && (
+              <p className="text-center md:text-left md:text-balance font-sans font-normal text-[1.1rem] md:text-[1.25rem] leading-[1.3] text-foreground/80">
+                {tagline}
+              </p>
+            )}
           </div>
 
           {/* CTA */}
-          <Link href={ctaHref} variant="pill" color="red" className="md:py-2.5">
+          <Link href={ctaHref || "#contact"} variant="pill" color="red" className="md:py-2.5">
             {ctaText}
           </Link>
         </div>
       </div>
 
       {/* ── Client Proof & Brand Logos at bottom of Hero ─────────────── */}
-      <SocialProof className="" />
+      {socialProofData && <SocialProof data={socialProofData} />}
 
       <HeroFace />
     </section>

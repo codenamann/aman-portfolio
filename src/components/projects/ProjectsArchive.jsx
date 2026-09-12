@@ -1,49 +1,42 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { projects as allProjects } from "@/data/projects";
+import { AlertCircle, Film } from "lucide-react";
 import ProjectVideoModal from "./ProjectVideoModal";
 import FeaturedShowcase from "./FeaturedShowcase";
 import LongFormSection from "./LongFormSection";
 import ShortFormSection from "./ShortFormSection";
 
-export default function ProjectsArchive({ initialProjects = allProjects }) {
+export default function ProjectsArchive({
+  initialProjects = [],
+  featuredShowcase = null,
+  error = null,
+}) {
   const [selectedProject, setSelectedProject] = useState(null);
 
-  // 1. Featured Showcase Top 5 (1 Spotlight, 2 Long-form, 2 Shorts)
-  const featuredShowcase = useMemo(() => {
-    const spotlight =
-      initialProjects.find((p) => p.spotlight) || initialProjects[0];
-    const longForm2 =
-      initialProjects.find((p) => p.id === "edit-war-challenge") ||
-      initialProjects[4];
-    const longForm3 =
-      initialProjects.find((p) => p.id === "fast-pace-edit") ||
-      initialProjects[8];
-    const short1 =
-      initialProjects.find((p) => p.id === "minimal-animation") ||
-      initialProjects[2];
-    const short2 =
-      initialProjects.find((p) => p.id === "talking-head-short") ||
-      initialProjects[3];
-
+  // Safe reference to server-resolved 5-slot featured showcase
+  const resolvedShowcase = useMemo(() => {
+    if (featuredShowcase) return featuredShowcase;
     return {
-      spotlight,
-      secondaryLongForm: longForm2,
-      tertiaryLongForm: longForm3,
-      shorts: [short1, short2],
+      spotlight: null,
+      secondaryLongForm: null,
+      tertiaryLongForm: null,
+      shorts: [],
     };
-  }, [initialProjects]);
+  }, [featuredShowcase]);
 
   // 2. All Long-form videos
   const longFormProjects = useMemo(() => {
-    return initialProjects.filter((p) => p.format === "long-form");
+    return (initialProjects || []).filter((p) => p.format === "long-form");
   }, [initialProjects]);
 
   // 3. All Vertical Shorts / Reels
   const shortProjects = useMemo(() => {
-    return initialProjects.filter(
-      (p) => p.format === "short" || p.format === "reel",
+    return (initialProjects || []).filter(
+      (p) =>
+        p.format === "short" ||
+        p.format === "short-form" ||
+        p.format === "reel",
     );
   }, [initialProjects]);
 
@@ -75,23 +68,55 @@ export default function ProjectsArchive({ initialProjects = allProjects }) {
           </div>
         </div>
 
-        {/* ── SECTION 1: Featured Showcase (Top Bento) ─────────────────────── */}
-        <FeaturedShowcase
-          featuredShowcase={featuredShowcase}
-          onSelectProject={setSelectedProject}
-        />
+        {/* ── Error State ─────────────────────────────────────────────────── */}
+        {error ? (
+          <div className="p-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-center flex flex-col items-center justify-center gap-3 my-12">
+            <AlertCircle size={28} className="text-red-400" />
+            <p className="text-base text-red-400 font-medium">{error}</p>
+          </div>
+        ) : initialProjects.length === 0 ? (
+          /* ── Explicit Empty State ───────────────────────────────────────── */
+          <div className="py-20 px-4 rounded-2xl bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-center gap-3 my-12">
+            <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted">
+              <Film size={24} />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground">
+              No projects found in the archive
+            </h3>
+            <p className="text-xs text-muted max-w-md">
+              Projects will appear here once they are added and published in the admin panel.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* ── SECTION 1: Featured Showcase (Top Bento) ─────────────────── */}
+            {(resolvedShowcase.spotlight ||
+              resolvedShowcase.secondaryLongForm ||
+              resolvedShowcase.shorts?.length > 0 ||
+              resolvedShowcase.tertiaryLongForm) && (
+              <FeaturedShowcase
+                featuredShowcase={resolvedShowcase}
+                onSelectProject={setSelectedProject}
+              />
+            )}
 
-        {/* ── SECTION 2: Dedicated Long-Form Films ──────────────────────────── */}
-        <LongFormSection
-          projects={longFormProjects}
-          onSelectProject={setSelectedProject}
-        />
+            {/* ── SECTION 2: Dedicated Long-Form Films ──────────────────────── */}
+            {longFormProjects.length > 0 && (
+              <LongFormSection
+                projects={longFormProjects}
+                onSelectProject={setSelectedProject}
+              />
+            )}
 
-        {/* ── SECTION 3: Dedicated Vertical Shorts & Reels ──────────────────── */}
-        <ShortFormSection
-          projects={shortProjects}
-          onSelectProject={setSelectedProject}
-        />
+            {/* ── SECTION 3: Dedicated Vertical Shorts & Reels ──────────────── */}
+            {shortProjects.length > 0 && (
+              <ShortFormSection
+                projects={shortProjects}
+                onSelectProject={setSelectedProject}
+              />
+            )}
+          </>
+        )}
       </div>
 
       {/* ── Reusable Adaptive Video Player Modal ─────────────────────────── */}
@@ -102,3 +127,4 @@ export default function ProjectsArchive({ initialProjects = allProjects }) {
     </div>
   );
 }
+

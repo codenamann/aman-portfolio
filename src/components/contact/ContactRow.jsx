@@ -1,5 +1,12 @@
 import React from "react";
-import { FaInstagram, FaLinkedinIn, FaBehance } from "react-icons/fa6";
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaBehance,
+  FaYoutube,
+  FaDribbble,
+  FaXTwitter,
+} from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 
 function SocialIcon({ name }) {
@@ -8,12 +15,19 @@ function SocialIcon({ name }) {
   switch (name?.toLowerCase()) {
     case "instagram":
       return <FaInstagram className={iconClass} />;
+    case "youtube":
+      return <FaYoutube className={iconClass} />;
     case "linkedin":
       return <FaLinkedinIn className={iconClass} />;
     case "behance":
       return <FaBehance className={iconClass} />;
+    case "dribbble":
+      return <FaDribbble className={iconClass} />;
+    case "x":
+    case "twitter":
+      return <FaXTwitter className={iconClass} />;
     default:
-      return null;
+      return <FaLinkedinIn className={iconClass} />;
   }
 }
 

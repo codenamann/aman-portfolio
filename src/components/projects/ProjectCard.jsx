@@ -118,7 +118,7 @@ export default function ProjectCard({
           <div className="absolute bottom-6 sm:bottom-8 inset-x-6 sm:inset-x-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="flex flex-col gap-1.5 max-w-xl">
               <span className="text-xs font-mono text-accent uppercase tracking-widest">
-                {project.category}
+                {project.subtitle || project.category || "Featured Edit"}
               </span>
               <h2 className="font-display font-black text-2xl sm:text-4xl md:text-5xl text-foreground tracking-tight group-hover:text-accent transition-colors">
                 {project.title}
@@ -149,6 +149,13 @@ export default function ProjectCard({
     );
   }
 
+  const instagramUrl =
+    project.links?.instagram ||
+    project.instagramUrl ||
+    (project.platform === "instagram" ? project.url || project.videoUrl : "");
+
+  const hasInstagram = Boolean(instagramUrl);
+
   // ── PORTRAIT MOBILE / SHORTS / REELS CARD ──────────────────────────────────
   if (isShort) {
     return (
@@ -158,7 +165,7 @@ export default function ProjectCard({
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         className={`group flex flex-col cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-accent transition-transform duration-300 ${className}`}
-        aria-label={`${isInstagram ? "Open Reel" : "Play Short"} ${project.title}`}
+        aria-label={`Play Short ${project.title}`}
       >
         <div className="relative w-full aspect-[9/16] rounded-2xl md:rounded-3xl overflow-hidden bg-card border border-border/80 group-hover:border-accent/60 transition-all duration-500">
           <Image
@@ -175,18 +182,24 @@ export default function ProjectCard({
 
           {/* Top Platform Badge */}
           <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[11px] font-medium text-white/90">
-            {isInstagram ? (
-              <>
-                <FaInstagram className="w-3 h-3 text-accent" />
-                <span>Reel</span>
-              </>
-            ) : (
-              <>
-                <FaYoutube className="w-3 h-3 text-accent" />
-                <span>Short</span>
-              </>
-            )}
+            <FaYoutube className="w-3 h-3 text-accent" />
+            <span>Short</span>
           </div>
+
+          {/* Top Right Instagram Link Button if present */}
+          {hasInstagram && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-3.5 right-3.5 z-20 flex items-center justify-center w-7 h-7 rounded-full bg-black/60 hover:bg-[#e1306c] text-white/90 backdrop-blur-md border border-white/10 transition-colors cursor-pointer"
+              title="Open Reel on Instagram"
+              aria-label={`Open ${project.title} on Instagram`}
+            >
+              <FaInstagram className="w-3.5 h-3.5" />
+            </a>
+          )}
 
           {/* Center Play Icon */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
@@ -201,7 +214,7 @@ export default function ProjectCard({
               {project.title}
             </h4>
             <p className="text-xs text-muted/80 line-clamp-1">
-              {project.category}
+              {project.subtitle || project.category || "Vertical Short"}
             </p>
           </div>
         </div>
@@ -272,7 +285,7 @@ export default function ProjectCard({
         </div>
 
         <div className="flex items-center justify-between text-xs sm:text-sm text-muted">
-          <span>{project.category}</span>
+          <span>{project.subtitle || project.category || "Video Edit"}</span>
           {project.year && (
             <span className="font-mono text-xs opacity-70">{project.year}</span>
           )}

@@ -3,6 +3,7 @@
 import { useEffect, useCallback } from "react";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
 import { X } from "lucide-react";
+import { FaInstagram } from "react-icons/fa6";
 
 export default function ProjectVideoModal({ project, onClose }) {
   const handleKeyDown = useCallback(
@@ -32,6 +33,7 @@ export default function ProjectVideoModal({ project, onClose }) {
 
   const isShort =
     project.format === "short" ||
+    project.format === "short-form" ||
     project.format === "reel" ||
     project.url?.includes("/shorts/") ||
     project.videoUrl?.includes("/shorts/");
@@ -39,6 +41,11 @@ export default function ProjectVideoModal({ project, onClose }) {
   const embedUrl = getYouTubeEmbedUrl(project.url || project.videoUrl, {
     autoplay: true,
   });
+
+  const instagramUrl =
+    project.links?.instagram ||
+    project.instagramUrl ||
+    (project.platform === "instagram" ? project.url || project.videoUrl : "");
 
   return (
     <div
@@ -57,17 +64,33 @@ export default function ProjectVideoModal({ project, onClose }) {
           isShort ? "max-w-sm sm:max-w-md max-h-[90vh]" : "max-w-3xl"
         }`}
       >
-        {/* ── Top Bar with Title and Close Button ───────────────────────────── */}
-        <div className="flex items-center justify-between px-1">
-          <div>
+        {/* ── Top Bar with Title, Instagram Link, and Close Button ───────────── */}
+        <div className="flex items-center justify-between gap-3 px-1">
+          <div className="min-w-0 flex-1">
             <h4
               id="video-modal-title"
               className="font-display font-bold text-base sm:text-lg text-foreground truncate text-ellipsis"
             >
               {project.title}
             </h4>
-            <p className="text-xs text-muted">{project.category}</p>
+            <p className="text-xs text-muted truncate">
+              {project.subtitle || project.category || (isShort ? "Vertical Short" : "Video Edit")}
+            </p>
           </div>
+
+          {instagramUrl && (
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-[#e1306c] text-white text-xs font-medium transition cursor-pointer shrink-0"
+              title="Open Reel on Instagram"
+            >
+              <FaInstagram className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Instagram</span>
+              <span>↗</span>
+            </a>
+          )}
         </div>
 
         {/* ── Adaptive Video Container (16:9 Landscape or 9:16 Portrait) ───── */}

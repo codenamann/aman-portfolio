@@ -26,33 +26,37 @@ export default function FeaturedShowcase({ featuredShowcase, onSelectProject }) 
         )}
 
         {/* Asymmetric Duo Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
-          {/* Left Column (7 cols): Prominent Landscape Feature */}
-          {featuredShowcase.secondaryLongForm && (
-            <div className="lg:col-span-7">
-              <ProjectCard
-                project={featuredShowcase.secondaryLongForm}
-                onSelect={onSelectProject}
-                aspectRatio="aspect-[16/10]"
-              />
-            </div>
-          )}
+        {(featuredShowcase.secondaryLongForm || (featuredShowcase.shorts && featuredShowcase.shorts.length > 0)) && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-start">
+            {/* Left Column (7 cols): Prominent Landscape Feature */}
+            {featuredShowcase.secondaryLongForm && (
+              <div className={featuredShowcase.shorts?.length > 0 ? "lg:col-span-7" : "lg:col-span-12"}>
+                <ProjectCard
+                  project={featuredShowcase.secondaryLongForm}
+                  onSelect={onSelectProject}
+                  aspectRatio="aspect-[16/10]"
+                />
+              </div>
+            )}
 
-          {/* Right Column (5 cols): 2 Vertical Cards */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-4 sm:gap-6">
-            {featuredShowcase.shorts.map(
-              (project, idx) =>
-                project && (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    onSelect={onSelectProject}
-                    aspectRatio="aspect-[9/16]"
-                  />
-                )
+            {/* Right Column (5 cols): 2 Vertical Cards */}
+            {featuredShowcase.shorts && featuredShowcase.shorts.length > 0 && (
+              <div className={featuredShowcase.secondaryLongForm ? "lg:col-span-5 grid grid-cols-2 gap-4 sm:gap-6" : "lg:col-span-12 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6"}>
+                {featuredShowcase.shorts.map(
+                  (project) =>
+                    project && (
+                      <ProjectCard
+                        key={project.id}
+                        project={project}
+                        onSelect={onSelectProject}
+                        aspectRatio="aspect-[9/16]"
+                      />
+                    )
+                )}
+              </div>
             )}
           </div>
-        </div>
+        )}
 
         {/* Bottom Landscape Row */}
         {featuredShowcase.tertiaryLongForm && (

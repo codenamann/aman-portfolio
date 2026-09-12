@@ -83,7 +83,7 @@ export default function InfiniteMarquee({
   // Render items based on their type (logo vs text capability vs tool)
   const renderItems = () => {
     return items.map((item, index) => {
-      if (item.type === "logo") {
+      if (item.type === "logo" || Boolean(item.src)) {
         return (
           <Image
             key={item.src || index}

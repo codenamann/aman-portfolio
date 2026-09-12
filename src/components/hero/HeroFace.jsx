@@ -24,9 +24,6 @@ export default function HeroFace() {
       const normalizedX = (e.clientX / window.innerWidth) * 2 - 1;
       const normalizedY = (e.clientY / window.innerHeight) * 2 - 1;
 
-      console.log("X", normalizedX);
-      console.log("Y", normalizedY);
-
       // maximum movement of the face
       const maxX = 25;
       const maxY = 20;

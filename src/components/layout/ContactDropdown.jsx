@@ -7,11 +7,24 @@ import { FaInstagram } from "react-icons/fa6";
 import { person } from "@/data/person";
 
 export default function ContactDropdown({
+  brand,
   buttonLabel = "BOOK",
   className = "",
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef(null);
+
+  const activeBrand = brand || {};
+  const bookingUrl = activeBrand.bookingUrl || activeBrand.call?.href || (person?.call?.href || "");
+  const instagramUrl =
+    activeBrand.socialLinks?.find((s) => s.platform === "instagram")?.url ||
+    activeBrand.instagram?.href ||
+    activeBrand.instagramUrl ||
+    (person?.instagram?.href || "");
+  const emailValue =
+    typeof activeBrand.email === "string"
+      ? activeBrand.email
+      : activeBrand.email?.value || activeBrand.email?.href?.replace("mailto:", "") || (person?.email?.value || "");
 
   // Close on outside click or Escape key
   useEffect(() => {
@@ -41,31 +54,28 @@ export default function ContactDropdown({
   }, [isOpen]);
 
   const contactOptions = [
-    {
+    bookingUrl && {
       id: "call",
       label: "Book a call",
-      href: person.call?.href || "https://cal.com",
+      href: bookingUrl,
       icon: Calendar,
       isExternal: true,
     },
-    {
+    instagramUrl && {
       id: "instagram",
       label: "Message on Instagram",
-      href:
-        person.instagram?.dmHref ||
-        person.instagram?.href ||
-        "https://www.instagram.com/amann.createss?igsi=eWpkbGR6YjlzYzg=",
+      href: instagramUrl,
       icon: FaInstagram,
       isExternal: true,
     },
-    {
+    emailValue && {
       id: "email",
       label: "Email",
-      href: person.email?.href || "mailto:shrivastavaaman176@gmail.com",
+      href: `mailto:${emailValue}`,
       icon: Mail,
       isExternal: false,
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>

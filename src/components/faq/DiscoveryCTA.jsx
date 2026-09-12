@@ -4,12 +4,28 @@ import Image from "next/image";
 /**
  * Reusable Discovery CTA sticky card
  */
-export default function DiscoveryCTA({ cta, className = "" }) {
+export default function DiscoveryCTA({ cta, profile, className = "" }) {
   if (!cta) return null;
 
   const descriptions = Array.isArray(cta.description)
     ? cta.description
-    : [cta.description];
+    : typeof cta.description === "string"
+    ? cta.description.split("\n\n").filter(Boolean)
+    : [];
+
+  const avatarSrc = cta.avatar || profile?.avatar || null;
+  const primaryHref =
+    cta.primaryButton?.href ||
+    cta.primaryButtonHref ||
+    profile?.call?.href ||
+    "#contact";
+  const primaryLabel =
+    cta.primaryButton?.label ||
+    cta.primaryButtonLabel ||
+    "Schedule Now";
+
+  const secondaryLabel = cta.secondaryLabel || (profile?.call?.label ? null : "Cal.com");
+  const secondaryHref = cta.secondaryHref || profile?.call?.href || "#contact";
 
   return (
     <div
@@ -17,10 +33,10 @@ export default function DiscoveryCTA({ cta, className = "" }) {
     >
       <div>
         {/* ── Avatar ─────────────────────────────────────────────────────── */}
-        {cta.avatar && (
+        {avatarSrc && (
           <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-white/20 shadow-md shrink-0">
             <Image
-              src={cta.avatar}
+              src={avatarSrc}
               alt="Avatar"
               fill
               sizes="64px"
@@ -31,50 +47,53 @@ export default function DiscoveryCTA({ cta, className = "" }) {
 
         {/* ── Title ──────────────────────────────────────────────────────── */}
         <h3 className="font-display font-bold text-2xl sm:text-3xl text-white tracking-tight leading-[1.15] mt-5 mb-4 whitespace-pre-line">
-          {cta.title}
+          {cta.title || "Let's discover what we can build together."}
         </h3>
 
         {/* ── Supporting Description Copy ────────────────────────────────── */}
-        <div className="text-sm sm:text-[15px] text-white/90 leading-relaxed font-normal flex flex-col gap-3 mb-8">
-          {descriptions.map((desc, idx) => (
-            <p key={idx}>{desc}</p>
-          ))}
-        </div>
+        {descriptions.length > 0 && (
+          <div className="text-sm sm:text-[15px] text-white/90 leading-relaxed font-normal flex flex-col gap-3 mb-8">
+            {descriptions.map((desc, idx) => (
+              <p key={idx} className="whitespace-pre-line">
+                {desc}
+              </p>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ── Actions Row: Schedule Now Button + Secondary Service Link ──── */}
       <div className="flex items-center gap-4 mt-auto pt-2">
-        {cta.primaryButton && (
-          <a
-            href={cta.primaryButton.href || "#contact"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 bg-[#0d0d0e] hover:bg-black text-white px-5 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer select-none"
+        <a
+          href={primaryHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2.5 bg-[#0d0d0e] hover:bg-black text-white px-5 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer select-none"
+        >
+          <svg
+            className="w-4 h-4 fill-none stroke-current stroke-2"
+            viewBox="0 0 24 24"
           >
-            <svg
-              className="w-4 h-4 fill-none stroke-current stroke-2"
-              viewBox="0 0 24 24"
-            >
-              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-              <line x1="16" y1="2" x2="16" y2="6" />
-              <line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" />
-            </svg>
-            <span>{cta.primaryButton.label || "Schedule Now"}</span>
-          </a>
-        )}
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>{primaryLabel}</span>
+        </a>
 
-        {cta.secondaryLabel && (
+        {secondaryLabel && (
           <a
-            href={cta.secondaryHref || "#contact"}
+            href={secondaryHref}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white/90 hover:text-white text-sm font-semibold transition-colors cursor-pointer select-none"
           >
-            {cta.secondaryLabel}
+            {secondaryLabel}
           </a>
         )}
       </div>
     </div>
   );
 }
+

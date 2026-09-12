@@ -22,7 +22,7 @@ export const person = {
   call: {
     label: "Book a call",
     value: "Schedule Now",
-    href: "https://cal.com/aman7yv9zd",
+    href: "https://cal.com/aman-7yv9zd",
   },
   instagram: {
     label: "Instagram",

@@ -12,6 +12,36 @@
   --surface: #1c1c1f;
   --white: #ffffff;
 
+  /* ── ADMIN PANEL SOLID COLOR TOKENS (No transparency overlays) ── */
+  --admin-bg: #111113;
+  --admin-surface: #151517;
+  --admin-surface-raised: #18181a;
+  --admin-surface-hover: #1f1f22;
+  --admin-surface-active: #242428;
+
+  --admin-border: #262628;
+  --admin-border-subtle: #1e1e21;
+  --admin-border-strong: #333338;
+
+  --admin-text: #f2f2f2;
+  --admin-text-secondary: #a1a1a6;
+  --admin-text-muted: #6f6f76;
+
+  --admin-accent: #e90c47;
+  --admin-accent-hover: #d00a3e;
+  --admin-accent-active: #ba0938;
+
+  --admin-success: #10b981;
+  --admin-warning: #f59e0b;
+  --admin-danger: #f43f5e;
+  --admin-info: #3b82f6;
+
+  /* ── ADMIN SHADOW / ELEVATION LEVELS (Dark Mode Depth) ── */
+  --admin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --admin-shadow-md: 0 4px 12px 0 rgba(0, 0, 0, 0.5), 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+  --admin-shadow-lg: 0 12px 32px 0 rgba(0, 0, 0, 0.65), 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+  --admin-shadow-popover: 0 16px 40px -4px rgba(0, 0, 0, 0.8), 0 0 0 1px #262628;
+
   /* ── SECTION HEADING SIZES (Change in this ONE place for all sections) ── */
   --section-heading-size: 2.25rem;       /* Mobile (<640px) */
   --section-heading-line-height: 1.05;
@@ -72,6 +102,26 @@
   --color-card:         var(--card);
   --color-surface:      var(--surface);
   --color-white:        var(--white);
+
+  /* Admin Semantic Solid Tokens */
+  --color-admin-bg:               var(--admin-bg);
+  --color-admin-surface:          var(--admin-surface);
+  --color-admin-surface-raised:   var(--admin-surface-raised);
+  --color-admin-surface-hover:    var(--admin-surface-hover);
+  --color-admin-surface-active:   var(--admin-surface-active);
+  --color-admin-border:           var(--admin-border);
+  --color-admin-border-subtle:    var(--admin-border-subtle);
+  --color-admin-border-strong:    var(--admin-border-strong);
+  --color-admin-text:             var(--admin-text);
+  --color-admin-text-secondary:   var(--admin-text-secondary);
+  --color-admin-text-muted:       var(--admin-text-muted);
+  --color-admin-accent:           var(--admin-accent);
+  --color-admin-accent-hover:     var(--admin-accent-hover);
+  --color-admin-accent-active:    var(--admin-accent-active);
+  --color-admin-success:          var(--admin-success);
+  --color-admin-warning:          var(--admin-warning);
+  --color-admin-danger:           var(--admin-danger);
+  --color-admin-info:             var(--admin-info);
 
   /* Typography */
   --font-sans:    var(--font-roboto, ui-sans-serif, system-ui, sans-serif);

@@ -15,6 +15,9 @@ export default function AboutContent({
 }) {
   const [imageError, setImageError] = useState(false);
 
+  const signatureSrc =
+    typeof signature === "string" ? signature : signature?.src || "";
+
   return (
     <div className={`w-full flex-1 flex flex-col gap-8 ${className}`}>
       {/* ── Descriptive Paragraphs ───────────────────────────────────────── */}
@@ -24,21 +27,15 @@ export default function AboutContent({
         ))}
       </div>
 
-      {/* ── Signature Graphic / Script ───────────────────────────────────── */}
-      {signature && (
+      {/* ── Signature Graphic (Authentic Red Signature Image) ─────────────── */}
+      {signatureSrc && !imageError && (
         <div className="my-1">
-          {signature.type === "image" && signature.src && !imageError ? (
-            <img
-              src={signature.src}
-              alt="Signature"
-              onError={() => setImageError(true)}
-              className="h-14 sm:h-16 w-auto object-contain"
-            />
-          ) : (
-            <div className="font-script font-bold text-5xl sm:text-6xl text-accent -rotate-6 select-none inline-block">
-              {signature.text || "Aman"}
-            </div>
-          )}
+          <img
+            src={signatureSrc}
+            alt="Signature"
+            onError={() => setImageError(true)}
+            className="h-14 sm:h-16 w-auto object-contain"
+          />
         </div>
       )}
 
