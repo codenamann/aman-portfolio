@@ -72,6 +72,12 @@ export default function LoginForm() {
       } else if (err.code === "auth/too-many-requests") {
         msg =
           "Access temporarily disabled due to many failed login attempts. Try again later or reset password.";
+      } else if (
+        typeof msg === "string" &&
+        (msg.includes("invalid_grant") || msg.includes("account not found"))
+      ) {
+        msg =
+          "Firebase Admin service account error (Invalid grant: account not found). The service account email or private key in your environment variables does not exist or has been revoked in Google Cloud / Firebase Console. Please verify FIREBASE_ADMIN_CLIENT_EMAIL and FIREBASE_ADMIN_PRIVATE_KEY in Vercel.";
       }
       setError(msg);
     } finally {

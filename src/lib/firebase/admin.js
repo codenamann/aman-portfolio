@@ -5,7 +5,15 @@ import { getAuth } from "firebase-admin/auth";
 
 function formatPrivateKey(key) {
   if (!key) return undefined;
-  return key.replace(/\\n/g, "\n");
+  let formatted = key.trim();
+  // Strip surrounding quotes if wrapped in single or double quotes
+  if (
+    (formatted.startsWith('"') && formatted.endsWith('"')) ||
+    (formatted.startsWith("'") && formatted.endsWith("'"))
+  ) {
+    formatted = formatted.slice(1, -1);
+  }
+  return formatted.replace(/\\n/g, "\n");
 }
 
 function initializeAdmin() {

@@ -45,16 +45,18 @@ export default function AdminAlert({
   return (
     <div
       role="alert"
-      className={`p-3.5 sm:p-4 rounded-xl border text-xs flex items-start gap-2.5 break-words ${config.containerClass} ${className}`}
+      className={`p-3.5 sm:p-4 rounded-xl border text-xs flex items-start gap-3 w-full max-w-full overflow-hidden transition-all shadow-sm ${config.containerClass} ${className}`}
     >
       <Icon size={16} className={`shrink-0 mt-0.5 ${config.iconClass}`} />
-      <div className="flex-1 leading-relaxed">{message}</div>
+      <div className="flex-1 min-w-0 leading-relaxed text-[11px] sm:text-xs break-words [word-break:break-word] overflow-wrap-anywhere whitespace-pre-wrap max-h-48 overflow-y-auto pr-1">
+        {message}
+      </div>
       {onDismiss && (
         <button
           type="button"
           onClick={onDismiss}
           aria-label="Dismiss alert"
-          className="p-1 hover:bg-white/10 rounded transition-colors shrink-0"
+          className="p-1 hover:bg-white/10 active:bg-white/20 rounded-md transition-colors shrink-0 text-white/60 hover:text-white"
         >
           <X size={14} />
         </button>
