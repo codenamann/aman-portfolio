@@ -17,12 +17,18 @@ export default function DiscoveryCTA({ cta, profile, className = "" }) {
   const primaryHref =
     cta.primaryButton?.href ||
     cta.primaryButtonHref ||
+    profile?.bookingUrl ||
     profile?.call?.href ||
     "#contact";
+
+  const isExternal = primaryHref.startsWith("http");
+  const primaryTarget = isExternal ? "_blank" : undefined;
+  const primaryRel = isExternal ? "noopener noreferrer" : undefined;
+
   const primaryLabel =
     cta.primaryButton?.label ||
     cta.primaryButtonLabel ||
-    "Schedule Now";
+    (isExternal ? "Schedule a Call" : "Get in Touch");
 
   const secondaryLabel = cta.secondaryLabel || (profile?.call?.label ? null : "Cal.com");
   const secondaryHref = cta.secondaryHref || profile?.call?.href || "#contact";
@@ -66,8 +72,8 @@ export default function DiscoveryCTA({ cta, profile, className = "" }) {
       <div className="flex items-center gap-4 mt-auto pt-2">
         <a
           href={primaryHref}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={primaryTarget}
+          rel={primaryRel}
           className="inline-flex items-center gap-2.5 bg-[#0d0d0e] hover:bg-black text-white px-5 py-3 rounded-full text-xs sm:text-sm font-semibold shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer select-none"
         >
           <svg

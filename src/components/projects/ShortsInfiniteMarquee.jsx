@@ -17,6 +17,7 @@ export default function ShortsInfiniteMarquee({
   onSelectProject,
 }) {
   const [failedThumbs, setFailedThumbs] = useState({});
+  const containerRef = useRef(null);
   const trackRef = useRef(null);
   const tweenRef = useRef(null);
 
@@ -31,22 +32,51 @@ export default function ShortsInfiniteMarquee({
     return [...list, ...list];
   }, [projects]);
 
-  // GSAP continuous loop with smooth deceleration on hover
+  // GSAP continuous loop with offscreen pausing and smooth deceleration on hover
   useEffect(() => {
     if (!trackRef.current || marqueeItems.length === 0) return;
+
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Reset previous tween
     if (tweenRef.current) tweenRef.current.kill();
 
-    // 45 second continuous loop moving -50%
+    if (prefersReducedMotion) {
+      return;
+    }
+
+    // 30 second continuous loop moving -50% (initially paused until visible)
     tweenRef.current = gsap.to(trackRef.current, {
       xPercent: -50,
       ease: "none",
       duration: 30,
       repeat: -1,
+      paused: true,
     });
 
+    // IntersectionObserver: automatically pauses ticker updates when scrolled offscreen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry || !tweenRef.current) return;
+
+        if (entry.isIntersecting) {
+          tweenRef.current.play();
+        } else {
+          tweenRef.current.pause();
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
     return () => {
+      observer.disconnect();
       if (tweenRef.current) tweenRef.current.kill();
     };
   }, [marqueeItems]);
@@ -74,7 +104,7 @@ export default function ShortsInfiniteMarquee({
   if (!projects || projects.length === 0) return null;
 
   return (
-    <div className="relative w-full overflow-hidden select-none py-4 sm:py-6">
+    <div ref={containerRef} className="relative w-full overflow-hidden select-none py-4 sm:py-6">
       {/* ── Section Header (Within max-w-5xl) ────────────────────────────── */}
       <div className="section-container section-px mb-8 flex items-center justify-between">
         <div className="flex items-center gap-2.5">

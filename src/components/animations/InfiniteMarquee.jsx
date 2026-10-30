@@ -40,6 +40,12 @@ export default function InfiniteMarquee({
     const viewport = viewportRef.current;
     if (!track || !viewport) return;
 
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) return;
+
     let animationFrame;
     let lastTime = performance.now();
     let width = 0;

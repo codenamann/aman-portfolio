@@ -12,6 +12,7 @@ import { useRouter, usePathname } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CustomEase } from "gsap/CustomEase";
+import { scheduleScrollTriggerRefresh } from "@/lib/scrollTriggerCoordination";
 
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
@@ -332,7 +333,7 @@ export default function PageTransition({ children }) {
         onComplete: () => {
           removeActiveSnapshot();
           resumeScrollAndUnlock();
-          ScrollTrigger.refresh();
+          scheduleScrollTriggerRefresh();
           stateRef.current = "idle";
           setTransitionState("idle");
           pendingTargetRef.current = null;
@@ -361,10 +362,7 @@ export default function PageTransition({ children }) {
         removeActiveSnapshot();
         clipPath.setAttribute("d", buildJellyRevealPath(w, h, h));
         resumeScrollAndUnlock();
-        ScrollTrigger.refresh();
-        requestAnimationFrame(() => {
-          ScrollTrigger.refresh();
-        });
+        scheduleScrollTriggerRefresh();
         stateRef.current = "idle";
         setTransitionState("idle");
         pendingTargetRef.current = null;

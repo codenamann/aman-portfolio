@@ -4,6 +4,8 @@ import { ReactLenis } from "lenis/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { scheduleScrollTriggerRefresh } from "@/lib/scrollTriggerCoordination";
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
@@ -19,8 +21,8 @@ export default function SmoothScroll({ children }) {
 
     if (isTouch) {
       setIsTouchDevice(true);
-      // Native window scroll will drive ScrollTrigger directly with 120Hz momentum
-      ScrollTrigger.refresh();
+      // Safely schedule refresh without blocking hydration main-thread execution
+      scheduleScrollTriggerRefresh();
       return;
     }
 

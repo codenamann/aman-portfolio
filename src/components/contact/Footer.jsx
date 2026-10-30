@@ -91,7 +91,7 @@ export default function Footer({ profile, className = "" }) {
     call: bookingUrl
       ? {
           label: "Call Me",
-          value: "Schedule Now",
+          value: "Book a Call",
           href: bookingUrl,
         }
       : null,
@@ -112,12 +112,15 @@ export default function Footer({ profile, className = "" }) {
     >
       <div className={`section-container flex flex-col ${className}`}>
         {/* ── Main Headline with Vertical Rotating Word (Static in code) ── */}
-        <h2 className="flex flex-col gap-2 font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.08]">
-          <div className="flex gap-5">
+        <h2
+          aria-label="Let's build incredible work together."
+          className="flex flex-col gap-2 font-display font-bold text-section-heading text-foreground tracking-tight leading-[1.08]"
+        >
+          <div className="flex gap-5" aria-hidden="true">
             <span>{FOOTER_STATIC_CONFIG.headline.before}</span>
             <RotatingWord interval={1500} />
           </div>
-          <span>{FOOTER_STATIC_CONFIG.headline.after}</span>
+          <span aria-hidden="true">{FOOTER_STATIC_CONFIG.headline.after}</span>
         </h2>
 
         {/* ── Contact Information Row (Dynamic from DB: Email, Call Me, Social) ── */}

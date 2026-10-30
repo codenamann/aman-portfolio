@@ -95,7 +95,7 @@ export default function Navbar({ brand, links = siteConfig.navLinks }) {
             <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-1 ring-white/15 transition-transform group-hover:scale-105">
               <Image
                 src={avatar}
-                alt={displayName}
+                alt=""
                 width={32}
                 height={32}
                 className="w-full h-full object-cover"

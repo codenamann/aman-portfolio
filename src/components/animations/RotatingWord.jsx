@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import localFont from "next/font/local";
 
@@ -14,17 +14,57 @@ export default function RotatingWord({
   interval = 1000,
 }) {
   const [index, setIndex] = useState(0);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setIndex((i) => (i + 1) % words.length);
-    }, interval);
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    return () => clearInterval(intervalId);
+    if (prefersReducedMotion) return;
+
+    let intervalId = null;
+
+    const startTimer = () => {
+      if (!intervalId) {
+        intervalId = setInterval(() => {
+          setIndex((i) => (i + 1) % words.length);
+        }, interval);
+      }
+    };
+
+    const stopTimer = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    // IntersectionObserver: only ticks the interval when footer is actually in viewport
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          startTimer();
+        } else {
+          stopTimer();
+        }
+      },
+      { rootMargin: "100px 0px" }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      stopTimer();
+      observer.disconnect();
+    };
   }, [words, interval]);
 
   return (
-    <div className="relative h-[50px]">
+    <div ref={containerRef} className="relative h-[50px]">
       <AnimatePresence>
         <motion.div
           key={words[index]}
@@ -37,7 +77,7 @@ export default function RotatingWord({
             transition: { duration: 0.4 },
           }}
           transition={{ duration: 0.5 }}
-          className={`absolute ${microphoneCheck.className} font-extralight tracking-wide text-accent`}
+          className={`absolute ${microphoneCheck.className} font-medium tracking-wide text-[#ff2d55]`}
         >
           {words[index]}
         </motion.div>
@@ -45,4 +85,3 @@ export default function RotatingWord({
     </div>
   );
 }
-
