@@ -14,7 +14,7 @@ export default function FooterNavigation({
     >
       {/* ── Menu Column ────────────────────────────────────────────────── */}
       <div className="flex flex-col">
-        <span className="text-xs md:text-sm text-muted font-normal uppercase tracking-wider mb-3">
+        <span className="text-xs md:text-sm text-zinc-400 font-normal uppercase tracking-wider mb-3">
           Menu
         </span>
         <div className="flex items-center gap-6">
@@ -32,7 +32,7 @@ export default function FooterNavigation({
 
       {/* ── Copyright & Decorative Accent Dot ───────────────────────────── */}
       <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-        <p className="text-xs sm:text-sm text-muted font-normal">{copyright}</p>
+        <p className="text-xs sm:text-sm text-zinc-400 font-normal">{copyright}</p>
       </div>
     </div>
   );

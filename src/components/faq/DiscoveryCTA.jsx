@@ -37,7 +37,7 @@ export default function DiscoveryCTA({ cta, profile, className = "" }) {
           <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-white/20 shadow-md shrink-0">
             <Image
               src={avatarSrc}
-              alt="Avatar"
+              alt=""
               fill
               sizes="64px"
               className="object-cover object-top"
@@ -52,7 +52,7 @@ export default function DiscoveryCTA({ cta, profile, className = "" }) {
 
         {/* ── Supporting Description Copy ────────────────────────────────── */}
         {descriptions.length > 0 && (
-          <div className="text-sm sm:text-[15px] text-white/90 leading-relaxed font-normal flex flex-col gap-3 mb-8">
+          <div className="text-sm sm:text-[15px] text-white leading-relaxed font-normal flex flex-col gap-3 mb-8">
             {descriptions.map((desc, idx) => (
               <p key={idx} className="whitespace-pre-line">
                 {desc}
@@ -82,12 +82,12 @@ export default function DiscoveryCTA({ cta, profile, className = "" }) {
           <span>{primaryLabel}</span>
         </a>
 
-        {secondaryLabel && (
+        {secondaryLabel && secondaryHref !== primaryHref && (
           <a
             href={secondaryHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/90 hover:text-white text-sm font-semibold transition-colors cursor-pointer select-none"
+            className="text-white hover:underline text-sm font-semibold transition-colors cursor-pointer select-none"
           >
             {secondaryLabel}
           </a>

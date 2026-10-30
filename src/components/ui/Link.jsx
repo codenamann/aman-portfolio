@@ -19,8 +19,8 @@ export default function Link({
       "text-md font-normal text-foreground/80 hover:text-foreground transition-colors duration-400",
     pill: {
       black:
-        "inline-block px-4.5 py-2 md:px-4 md:py-[5px] leading-tight text-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),0_6px_10px_color-mix(in_srgb,var(--color-accent)30%,transparent_0%)] hover:shadow-none font-normal text-foreground/95 bg-accent rounded-full hover:opacity-90",
-      red: "inline-block px-4.5 py-2 md:px-4 md:py-[5px] leading-tight text-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),0_6px_10px_color-mix(in_srgb,var(--color-accent)30%,transparent_0%)] hover:shadow-none font-normal text-foreground/95 bg-accent rounded-full hover:opacity-90",
+        "inline-block px-4.5 py-2 md:px-4 md:py-[5px] leading-tight text-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),0_6px_10px_color-mix(in_srgb,var(--color-accent)30%,transparent_0%)] hover:shadow-none font-medium text-white bg-accent rounded-full hover:opacity-90",
+      red: "inline-block px-4.5 py-2 md:px-4 md:py-[5px] leading-tight text-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),0_6px_10px_color-mix(in_srgb,var(--color-accent)30%,transparent_0%)] hover:shadow-none font-medium text-white bg-accent rounded-full hover:opacity-90",
     },
   };
 

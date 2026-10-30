@@ -46,7 +46,7 @@ export default function ContactRow({ contact, className = "" }) {
       {/* ── Email Column ───────────────────────────────────────────────── */}
       {contact.email && (
         <div className="flex md:flex-1 flex-col">
-          <span className="text-xs md:text-sm text-muted font-normal uppercase tracking-wider mb-2">
+          <span className="text-xs md:text-sm text-zinc-400 font-normal uppercase tracking-wider mb-2">
             {contact.email.label || "Email"}
           </span>
           <a
@@ -62,7 +62,7 @@ export default function ContactRow({ contact, className = "" }) {
       {contact.call && (
         <div className="flex md:flex-1 md:items-center flex-col">
           <div className="flex flex-col">
-            <span className="text-xs md:text-sm text-muted font-normal uppercase tracking-wider mb-2">
+            <span className="text-xs md:text-sm text-zinc-400 font-normal uppercase tracking-wider mb-2">
               {contact.call.label || "Call Me"}
             </span>
             <a
@@ -81,7 +81,7 @@ export default function ContactRow({ contact, className = "" }) {
       {contact.social && contact.social.length > 0 && (
         <div className="flex md:flex-1 md:items-center flex-col">
           <div>
-            <span className="text-xs md:text-sm text-muted font-normal uppercase tracking-wider mb-2">
+            <span className="text-xs md:text-sm text-zinc-400 font-normal uppercase tracking-wider mb-2">
               Social
             </span>
             <div className="flex items-center gap-1.5 md:gap-2.5 pt-0.5">

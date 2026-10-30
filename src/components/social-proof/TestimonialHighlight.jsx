@@ -22,7 +22,7 @@ function QuoteAttribution({ author, role, company, avatar }) {
         <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border border-border ring-1 ring-white/10 shrink-0 bg-surface">
           <Image
             src={avatar}
-            alt={author}
+            alt=""
             fill
             sizes="48px"
             className="object-cover"

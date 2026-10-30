@@ -44,7 +44,7 @@ export default function TestimonialCard({ testimonial, className = "" }) {
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-white/10 group-hover:border-white/30 shrink-0 transition-colors duration-300">
               <Image
                 src={testimonial.avatar}
-                alt={testimonial.author}
+                alt=""
                 fill
                 sizes="36px"
                 className="object-cover"
@@ -53,10 +53,10 @@ export default function TestimonialCard({ testimonial, className = "" }) {
           )}
 
           <div className="flex flex-col">
-            <h4 className="font-bold text-xs sm:text-sm text-foreground group-hover:text-white leading-tight transition-colors duration-300">
+            <h3 className="font-bold text-xs sm:text-sm text-foreground group-hover:text-white leading-tight transition-colors duration-300">
               {testimonial.author}
-            </h4>
-            <p className="text-[11px] sm:text-xs text-muted group-hover:text-white/80 leading-tight mt-0.5 transition-colors duration-300">
+            </h3>
+            <p className="text-[11px] sm:text-xs text-zinc-400 group-hover:text-white/90 leading-tight mt-0.5 transition-colors duration-300">
               {testimonial.role}
             </p>
           </div>

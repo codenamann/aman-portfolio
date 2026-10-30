@@ -48,11 +48,11 @@ export default function ServiceCard({ service, className = "" }) {
     ? "bg-accent text-white shadow-xl shadow-accent/10 border border-accent/20"
     : "bg-card text-foreground border border-border/80 shadow-lg shadow-black/40";
 
-  const descriptionStyles = isAccent ? "text-white/90" : "text-foreground/75";
+  const descriptionStyles = isAccent ? "text-white font-normal" : "text-zinc-200";
 
   const tagStyles = isAccent
-    ? "bg-white/15 text-white border border-white/20 hover:bg-white/20"
-    : "bg-white/[0.04] text-muted border border-border/80 hover:text-foreground hover:border-border";
+    ? "bg-white/20 text-white border border-white/30 hover:bg-white/25"
+    : "bg-white/[0.04] text-zinc-300 border border-border/80 hover:text-foreground hover:border-border";
 
   return (
     <div
