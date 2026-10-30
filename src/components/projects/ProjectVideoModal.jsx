@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { getYouTubeEmbedUrl } from "@/lib/youtube";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { FaInstagram } from "react-icons/fa6";
 
 export default function ProjectVideoModal({ project, onClose }) {
+  const [isIframeLoading, setIsIframeLoading] = useState(true);
+
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === "Escape") {
@@ -17,6 +19,7 @@ export default function ProjectVideoModal({ project, onClose }) {
 
   useEffect(() => {
     if (!project) return;
+    setIsIframeLoading(true);
 
     // Lock body scroll
     const originalOverflow = document.body.style.overflow;
@@ -49,7 +52,7 @@ export default function ProjectVideoModal({ project, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 sm:p-6 md:p-10 animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-3 sm:p-6 md:p-10 animate-fade-in"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -60,8 +63,8 @@ export default function ProjectVideoModal({ project, onClose }) {
       aria-labelledby="video-modal-title"
     >
       <div
-        className={`relative w-full flex flex-col gap-3 ${
-          isShort ? "max-w-sm sm:max-w-md max-h-[90vh]" : "max-w-3xl"
+        className={`relative w-full flex flex-col gap-2.5 sm:gap-3 ${
+          isShort ? "max-w-xs sm:max-w-md max-h-[88dvh]" : "max-w-3xl max-h-[90dvh]"
         }`}
       >
         {/* ── Top Bar with Title, Instagram Link, and Close Button ───────────── */}
@@ -69,11 +72,11 @@ export default function ProjectVideoModal({ project, onClose }) {
           <div className="min-w-0 flex-1">
             <h4
               id="video-modal-title"
-              className="font-display font-bold text-base sm:text-lg text-foreground truncate text-ellipsis"
+              className="font-display font-bold text-sm sm:text-base md:text-lg text-foreground truncate text-ellipsis"
             >
               {project.title}
             </h4>
-            <p className="text-xs text-muted truncate">
+            <p className="text-[11px] sm:text-xs text-muted truncate">
               {project.subtitle || project.category || (isShort ? "Vertical Short" : "Video Edit")}
             </p>
           </div>
@@ -83,7 +86,7 @@ export default function ProjectVideoModal({ project, onClose }) {
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-[#e1306c] text-white text-xs font-medium transition cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/10 hover:bg-[#e1306c] text-white text-xs font-medium transition cursor-pointer shrink-0"
               title="Open Reel on Instagram"
             >
               <FaInstagram className="w-3.5 h-3.5" />
@@ -96,14 +99,23 @@ export default function ProjectVideoModal({ project, onClose }) {
         {/* ── Adaptive Video Container (16:9 Landscape or 9:16 Portrait) ───── */}
         <div
           className={`relative w-full rounded-2xl overflow-hidden shadow-2xl bg-black border border-border ${
-            isShort ? "aspect-[9/16] max-h-[75vh]" : "aspect-video"
+            isShort ? "aspect-[9/16] max-h-[75dvh]" : "aspect-video"
           }`}
         >
+          {/* Subtle loading placeholder while iframe is initializing */}
+          {isIframeLoading && embedUrl && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[#111113] text-zinc-400">
+              <Loader2 className="w-6 h-6 animate-spin text-accent" />
+              <span className="text-xs font-mono">Loading player...</span>
+            </div>
+          )}
+
           {embedUrl ? (
             <iframe
               src={embedUrl}
               title={project.title}
-              className="w-full h-full border-0"
+              onLoad={() => setIsIframeLoading(false)}
+              className="w-full h-full border-0 relative z-20"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
@@ -119,10 +131,11 @@ export default function ProjectVideoModal({ project, onClose }) {
         type="button"
         onClick={onClose}
         aria-label="Close video player"
-        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-surface border border-border flex items-center justify-center text-foreground hover:text-accent hover:border-accent/40 transition-colors cursor-pointer absolute top-6 right-6"
+        className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-surface border border-border flex items-center justify-center text-foreground hover:text-accent hover:border-accent/40 transition-colors cursor-pointer absolute top-4 right-4 sm:top-6 sm:right-6 z-50 shadow-lg"
       >
-        <X />
+        <X size={18} />
       </button>
     </div>
   );
 }
+

@@ -92,6 +92,9 @@ export default function ShortsInfiniteMarquee({
         className="section-container section-px relative overflow-hidden"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleMouseEnter}
+        onTouchEnd={handleMouseLeave}
+        onTouchCancel={handleMouseLeave}
       >
         {/* Soft atmospheric gradient feathering on left & right edges (no harsh black walls) */}
         <div className="absolute inset-y-0 left-0 w-12 sm:w-20 md:w-24 bg-gradient-to-r from-[#111113] to-transparent pointer-events-none z-20" />
@@ -145,7 +148,9 @@ export default function ShortsInfiniteMarquee({
                   src={thumbSrc}
                   alt={project.title}
                   fill
-                  sizes="(max-width: 768px) 185px, 250px"
+                  priority={idx < 2}
+                  loading={idx < 4 ? "eager" : "lazy"}
+                  sizes="(max-width: 640px) 160px, (max-width: 768px) 185px, 250px"
                   onError={() => {
                     if (
                       !project.thumbnail &&

@@ -1,16 +1,35 @@
+import dynamic from "next/dynamic";
 import Navbar from "@/components/layout/Navbar";
 import Hero from "@/components/hero/Hero";
 import Projects from "@/components/projects/Projects";
 import TestimonialHighlight from "@/components/social-proof/TestimonialHighlight";
-import Services from "@/components/services/Services";
-import About from "@/components/about/About";
-import Testimonials from "@/components/social-proof/Testimonials";
-import FAQCTA from "@/components/faq/FAQCTA";
-import Footer from "@/components/contact/Footer";
 import CursorBall from "@/components/layout/CursorBall";
 import RouteReady from "@/components/layout/RouteReady";
 import { getFeaturedProjects } from "@/services/projects/getFeaturedProjects";
 import { getAllContent } from "@/services/content/getContent";
+
+const Services = dynamic(() => import("@/components/services/Services"), {
+  loading: () => <div className="w-full min-h-[360px] bg-background" />,
+});
+
+const About = dynamic(() => import("@/components/about/About"), {
+  loading: () => <div className="w-full min-h-[360px] bg-background" />,
+});
+
+const Testimonials = dynamic(
+  () => import("@/components/social-proof/Testimonials"),
+  {
+    loading: () => <div className="w-full min-h-[300px] bg-background" />,
+  }
+);
+
+const FAQCTA = dynamic(() => import("@/components/faq/FAQCTA"), {
+  loading: () => <div className="w-full min-h-[300px] bg-background" />,
+});
+
+const Footer = dynamic(() => import("@/components/contact/Footer"), {
+  loading: () => <div className="w-full min-h-[260px] bg-background" />,
+});
 
 export default async function Home() {
   let shortForm = [];

@@ -1,6 +1,7 @@
 "use client";
 import { motion, useMotionValue, useSpring } from "motion/react";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function HeroFace() {
   const x = useMotionValue(0);
@@ -50,12 +51,17 @@ export default function HeroFace() {
           y: springY,
         }}
       >
-        <img
+        <Image
           src="/bitmoji-face.webp"
-          alt="bitmoji"
-          className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+          alt="Aman Shrivastava - Creative Visual Identity"
+          width={480}
+          height={480}
+          priority
+          sizes="(max-width: 640px) 320px, (max-width: 1024px) 440px, 476px"
+          className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)] select-none"
         />
       </motion.div>
     </div>
   );
 }
+

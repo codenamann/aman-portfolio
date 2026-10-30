@@ -2,16 +2,21 @@
 
 import { useState, useMemo } from "react";
 import { AlertCircle, Film } from "lucide-react";
-import ProjectVideoModal from "./ProjectVideoModal";
+import dynamic from "next/dynamic";
 import LongFormSection from "./LongFormSection";
 import ShortFormSection from "./ShortFormSection";
 import CinematicHeroCarousel from "./CinematicHeroCarousel";
 import ShortsInfiniteMarquee from "./ShortsInfiniteMarquee";
 
+const ProjectVideoModal = dynamic(() => import("./ProjectVideoModal"), {
+  ssr: false,
+});
+
 export default function ProjectsArchive({
   initialProjects = [],
   featuredShowcase = null,
   error = null,
+  isLoading = false,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -66,24 +71,41 @@ export default function ProjectsArchive({
       </div>
 
       {/* ── BIG FULL-WIDTH LONG-FORM MOVIE CAROUSEL ──────────────────────── */}
-      {topFiveProjects.length > 0 && (
+      {isLoading ? (
+        <div className="w-full max-w-5xl mx-auto section-px mb-12 sm:mb-16 animate-pulse">
+          <div className="w-full aspect-[16/9.5] sm:aspect-video rounded-2xl md:rounded-[2rem] bg-white/[0.03] border border-white/10 flex items-center justify-center">
+            <div className="w-14 h-14 rounded-full bg-white/10" />
+          </div>
+        </div>
+      ) : topFiveProjects.length > 0 ? (
         <div className="w-full max-w-5xl mx-auto section-px mb-12 sm:mb-16">
           <CinematicHeroCarousel
             projects={topFiveProjects}
             onSelectProject={setSelectedProject}
           />
         </div>
-      )}
+      ) : null}
 
       {/* ── FULL-SCREEN SHORTS INFINITE MARQUEE WITH SMOKY GRADIENT FRAMING ── */}
-      {shortProjects.length > 0 && (
+      {isLoading ? (
+        <div className="w-full max-w-5xl mx-auto section-px mb-16 sm:mb-20 animate-pulse">
+          <div className="flex gap-4 overflow-hidden">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-[160px] sm:w-[185px] md:w-[250px] aspect-[9/16] rounded-2xl md:rounded-3xl bg-white/[0.03] border border-white/10"
+              />
+            ))}
+          </div>
+        </div>
+      ) : shortProjects.length > 0 ? (
         <div className="w-full mb-16 sm:mb-20">
           <ShortsInfiniteMarquee
             projects={shortProjects}
             onSelectProject={setSelectedProject}
           />
         </div>
-      )}
+      ) : null}
 
       {/* ── Main Content Container ───────────────────────────────────────── */}
       <div className="section-container section-px flex flex-col gap-14 sm:gap-18">
@@ -92,6 +114,17 @@ export default function ProjectsArchive({
           <div className="p-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-center flex flex-col items-center justify-center gap-3 my-12">
             <AlertCircle size={28} className="text-red-400" />
             <p className="text-base text-red-400 font-medium">{error}</p>
+          </div>
+        ) : isLoading ? (
+          /* ── Localized Long Form Grid Skeleton ─────────────────────────── */
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex flex-col gap-3">
+                <div className="w-full aspect-[16/9.5] rounded-2xl bg-white/[0.03] border border-white/10" />
+                <div className="w-2/3 h-5 rounded bg-white/10" />
+                <div className="w-1/3 h-4 rounded bg-white/5" />
+              </div>
+            ))}
           </div>
         ) : initialProjects.length === 0 ? (
           /* ── Explicit Empty State ───────────────────────────────────────── */
@@ -108,6 +141,7 @@ export default function ProjectsArchive({
             </p>
           </div>
         ) : (
+
           <>
             {/* ── Dedicated Long-Form Films ────────────────────────────────── */}
             {longFormProjects.length > 0 && (

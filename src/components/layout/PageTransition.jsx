@@ -356,6 +356,9 @@ export default function PageTransition({ children }) {
         clipPath.setAttribute("d", buildJellyRevealPath(w, h, h));
         resumeScrollAndUnlock();
         ScrollTrigger.refresh();
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+        });
         stateRef.current = "idle";
         setTransitionState("idle");
         pendingTargetRef.current = null;

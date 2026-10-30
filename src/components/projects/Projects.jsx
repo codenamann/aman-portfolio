@@ -7,8 +7,12 @@ import { AlertCircle, Film } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import dynamic from "next/dynamic";
 import ProjectCard from "./ProjectCard";
-import ProjectVideoModal from "./ProjectVideoModal";
+
+const ProjectVideoModal = dynamic(() => import("./ProjectVideoModal"), {
+  ssr: false,
+});
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,6 +21,7 @@ export default function Projects({
   featuredShorts = [],
   featuredLongForm = [],
   error = null,
+  isLoading = false,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTab, setActiveTab] = useState(initialType); // "shorts" | "long-form"
@@ -127,6 +132,21 @@ export default function Projects({
           <div className="p-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-center flex flex-col items-center justify-center gap-3">
             <AlertCircle size={24} className="text-red-400" />
             <p className="text-sm text-red-400 font-medium">{error}</p>
+          </div>
+        ) : isLoading ? (
+          /* ── Localized Projects-Only Skeleton ───────────────────────────── */
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 md:gap-6 animate-pulse py-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className={`${
+                  isShorts ? "aspect-[9/16]" : "aspect-[16/9.5]"
+                } rounded-2xl bg-white/[0.03] border border-white/5 flex flex-col justify-end p-4 gap-2`}
+              >
+                <div className="w-3/4 h-4 rounded bg-white/10" />
+                <div className="w-1/2 h-3 rounded bg-white/5" />
+              </div>
+            ))}
           </div>
         ) : (
           /* ── Content Viewport with Smooth Cross-Fade Transition ─────────── */
