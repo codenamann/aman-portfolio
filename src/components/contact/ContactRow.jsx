@@ -86,16 +86,20 @@ export default function ContactRow({ contact, className = "" }) {
             </span>
             <div className="flex items-center gap-1.5 md:gap-2.5 pt-0.5">
               {contact.social.map((s) => (
-                <a
+                <div
                   key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="w-7 h-7 md:w-8 sm:h-8 rounded-full bg-accent flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-transform"
+                  className="footer-social-item will-change-transform"
                 >
-                  <SocialIcon name={s.icon || s.label} />
-                </a>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="w-7 h-7 md:w-8 sm:h-8 rounded-full bg-accent flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-transform"
+                  >
+                    <SocialIcon name={s.icon || s.label} />
+                  </a>
+                </div>
               ))}
             </div>
           </div>

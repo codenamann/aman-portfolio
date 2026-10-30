@@ -62,7 +62,7 @@ export default function ProfilePanel({ profile, className = "" }) {
 
           {/* ── Social Links Pill Overlay (Bottom Right) ──────────────────── */}
           {socialLinks && socialLinks.length > 0 && (
-            <div className="absolute bottom-4 right-4 flex items-center gap-1.5 p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 z-10">
+            <div className="about-social-pill absolute bottom-4 right-4 flex items-center gap-1.5 p-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/10 z-10">
               {socialLinks.map((link) => {
                 const targetUrl = link.url || link.href;
                 if (!targetUrl) return null;
@@ -74,7 +74,7 @@ export default function ProfilePanel({ profile, className = "" }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={platformName || "Social link"}
-                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+                    className="about-social-link will-change-transform w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition-colors"
                   >
                     <SocialIcon name={platformName} />
                   </a>

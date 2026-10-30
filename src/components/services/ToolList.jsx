@@ -45,7 +45,7 @@ export default function ToolList({ items = tools }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[1.2rem] font-normal text-foreground/75 select-none">
+      <span className="services-tools-label text-[1.2rem] font-normal text-foreground/75 select-none inline-block">
         Tools that I use
       </span>
 
@@ -58,7 +58,7 @@ export default function ToolList({ items = tools }) {
               key={tool.id || tool.name}
               onMouseEnter={() => setHoveredId(tool.id)}
               onMouseLeave={() => setHoveredId(null)}
-              className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-card border flex items-center justify-center transition-all duration-200 select-none cursor-pointer ${
+              className={`tool-item-anim will-change-transform relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-card border flex items-center justify-center transition-[border-color,box-shadow] duration-200 select-none cursor-pointer ${
                 isHovered ? "border-border shadow-md" : "border-border/80"
               }`}
             >

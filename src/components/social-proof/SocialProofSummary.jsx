@@ -1,19 +1,62 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import Image from "next/image";
 import { formatClientCount } from "@/lib/formatClientCount";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export const DEFAULT_AVATARS = [
+  { src: "/avatars/avatar1.jpg", alt: "Client 1" },
+  { src: "/avatars/avatar2.jpg", alt: "Client 2" },
+  { src: "/avatars/avatar3.jpg", alt: "Client 3" },
+  { src: "/avatars/avatar4.jpg", alt: "Client 4" },
+  { src: "/avatars/avatar5.jpg", alt: "Client 5" },
+];
 
 /**
- * Reusable AvatarStack component
+ * Reusable AvatarStack component with GSAP staggered pop-in on scroll
  */
-export function AvatarStack({ avatars = [], className = "" }) {
-  if (!avatars || avatars.length === 0) return null;
+export function AvatarStack({ avatars, className = "" }) {
+  const stackRef = useRef(null);
+  const items = avatars && avatars.length > 0 ? avatars : DEFAULT_AVATARS;
+
+  useGSAP(
+    () => {
+      gsap.from(".avatar-item", {
+        scrollTrigger: {
+          trigger: stackRef.current,
+          start: "top 92%",
+          toggleActions: "play none none none",
+        },
+        scale: 0,
+        opacity: 0,
+        x: 16,
+        duration: 0.6,
+        stagger: {
+          each: 0.1,
+          from: "end",
+        },
+        ease: "back.out(2)",
+      });
+    },
+    { scope: stackRef }
+  );
+
+  if (!items || items.length === 0) return null;
 
   return (
-    <div className={`flex items-center -space-x-2 sm:-space-x-2.5 ${className}`}>
-      {avatars.map((avatar, index) => (
+    <div
+      ref={stackRef}
+      className={`flex items-center -space-x-2 sm:-space-x-2.5 ${className}`}
+    >
+      {items.map((avatar, index) => (
         <div
           key={index}
-          className="relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full overflow-hidden border-2 border-background shadow-md shrink-0"
+          className="avatar-item relative w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full overflow-hidden border-2 border-background shadow-md shrink-0 will-change-transform"
         >
           <Image
             src={avatar.src || avatar}
@@ -49,19 +92,20 @@ export function RatingSummary({ rating = 5, className = "" }) {
 
 /**
  * Combined Social Proof Header summary:
- * [Avatar Stack]  [★★★★★] [99+ Happy clients]
+ * [Avatar Stack]  [★★★★★] [20+ Happy clients]
  */
 export default function SocialProofSummary({
-  avatars = [],
+  avatars,
   rating = 5,
-  satisfiedClients = 147,
+  satisfiedClients = "20+",
   className = "",
 }) {
+  const activeAvatars = avatars && avatars.length > 0 ? avatars : DEFAULT_AVATARS;
   const formattedCount = formatClientCount(satisfiedClients);
 
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      <AvatarStack avatars={avatars} />
+      <AvatarStack avatars={activeAvatars} />
 
       <div className="flex flex-col justify-center gap-0.5">
         <RatingSummary rating={rating} />

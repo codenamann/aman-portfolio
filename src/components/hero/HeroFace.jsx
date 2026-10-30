@@ -40,14 +40,21 @@ export default function HeroFace() {
   }, [x, y]);
 
   return (
-    <div className="absolute top-60 md:top-35 lg:bottom-5 xl:bottom-25 w-80 md:w-80 lg:w-110 xl:w-119 left-1/2 -translate-x-1/2 ">
+    <div
+      id="hero-face-wrapper"
+      className="absolute top-60 md:top-35 lg:bottom-5 xl:bottom-25 w-80 md:w-80 lg:w-110 xl:w-119 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0"
+    >
       <motion.div
         style={{
           x: springX,
           y: springY,
         }}
       >
-        <img src="/bitmoji-face.png" alt="bitmoji" className="w-full h-auto" />
+        <img
+          src="/bitmoji-face.webp"
+          alt="bitmoji"
+          className="w-full h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+        />
       </motion.div>
     </div>
   );

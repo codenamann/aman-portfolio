@@ -1,10 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import RotatingWord from "@/components/animations/RotatingWord";
 import ContactRow from "./ContactRow";
 import FooterNavigation from "./FooterNavigation";
 import FooterSignature from "./FooterSignature";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FOOTER_STATIC_CONFIG = {
   headline: {
@@ -19,11 +24,38 @@ const FOOTER_STATIC_CONFIG = {
 /**
  * Contact & Footer Section
  *
- * Architecture Rule:
- * - Headline, rotating word, menu links, copyright, and closing brand typography ("MR. AMAN") are 100% static in code.
- * - Strictly email, book a call link, and socials come dynamically from database (profile doc).
+ * Animations:
+ * - Single scroll-in animation: Social links slide & fade left from right
  */
 export default function Footer({ profile, className = "" }) {
+  const footerRef = useRef(null);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        ".footer-social-item",
+        {
+          x: 25,
+          opacity: 0,
+        },
+        {
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: "top 85%",
+            toggleActions: "play none none none",
+            once: true,
+          },
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "back.out(1.6)",
+          clearProps: "transform,opacity",
+        },
+      );
+    },
+    { scope: footerRef },
+  );
   // Resolve contact channels strictly from canonical profile DB document
   const emailValue =
     typeof profile?.email === "string"
@@ -74,6 +106,7 @@ export default function Footer({ profile, className = "" }) {
 
   return (
     <footer
+      ref={footerRef}
       id="contact"
       className={`w-full bg-background border-t border-border flex justify-center section-py section-px`}
     >

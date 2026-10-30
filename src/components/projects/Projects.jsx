@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { AlertCircle, Film } from "lucide-react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectCard from "./ProjectCard";
 import ProjectVideoModal from "./ProjectVideoModal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects({
   initialType = "shorts",
@@ -15,25 +20,66 @@ export default function Projects({
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTab, setActiveTab] = useState(initialType); // "shorts" | "long-form"
+  const sectionRef = useRef(null);
+  const headingRef = useRef(null);
 
   const displayProjects =
     activeTab === "shorts" ? featuredShorts : featuredLongForm;
   const isShorts = activeTab === "shorts";
 
+  useGSAP(
+    () => {
+      // 1. Heading masked reveal on scroll (runs ONCE on scroll into view)
+      gsap.from(".projects-heading-text", {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+          once: true,
+        },
+        yPercent: 120,
+        duration: 0.9,
+        ease: "power3.out",
+      });
+
+      // 2. Format tab toggle button scale-fade (runs ONCE on scroll into view)
+      gsap.from(".projects-tab-switcher", {
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+          once: true,
+        },
+        scale: 0.9,
+        opacity: 0,
+        duration: 0.65,
+        delay: 0.15,
+        ease: "back.out(1.5)",
+      });
+    },
+    { scope: sectionRef }
+  );
+
   return (
     <section
+      ref={sectionRef}
       id="projects"
       className="w-full flex justify-center bg-background border-t border-border section-py section-px"
     >
       <div className="section-container flex-1">
         {/* ── Section Heading & Format Switcher ─────────────────────────── */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 md:mb-12">
-          <h2 className="font-display font-bold text-section-heading text-foreground tracking-tight">
-            Latest <span className="text-accent">Projects</span>
+          <h2
+            ref={headingRef}
+            className="font-display font-bold text-section-heading text-foreground tracking-tight overflow-hidden"
+          >
+            <span className="projects-heading-text inline-block">
+              Latest <span className="text-accent">Projects</span>
+            </span>
           </h2>
 
           {/* Format Toggle Switcher with Sliding Active Pill */}
-          <div className="inline-flex p-1 rounded-full bg-white/[0.05] border border-white/10 w-fit relative z-0">
+          <div className="projects-tab-switcher inline-flex p-1 rounded-full bg-white/[0.05] border border-white/10 w-fit relative z-0">
             {/* Shorts & Reels Tab */}
             <button
               type="button"
@@ -82,44 +128,85 @@ export default function Projects({
             <AlertCircle size={24} className="text-red-400" />
             <p className="text-sm text-red-400 font-medium">{error}</p>
           </div>
-        ) : displayProjects.length === 0 ? (
-          /* ── Explicit Empty State ───────────────────────────────────────── */
-          <div className="py-16 px-4 rounded-2xl bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted">
-              <Film size={20} />
-            </div>
-            <h3 className="text-base font-semibold text-foreground">
-              No {isShorts ? "Shorts & Reels" : "Long-Form"} projects found
-            </h3>
-            <p className="text-xs text-muted max-w-sm">
-              Featured showcase slots have not been configured yet in the admin panel.
-            </p>
-          </div>
         ) : (
-          /* ── Responsive Projects Grid with Smooth Transition ─────────── */
-          <div className="min-h-[420px]">
+          /* ── Content Viewport with Smooth Cross-Fade Transition ─────────── */
+          <div className="projects-grid-wrapper min-h-[380px] relative">
             <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 14, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                className={
-                  isShorts
-                    ? "grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
-                    : "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10 md:gap-y-12"
-                }
-              >
-                {displayProjects.map((project) => (
-                  <ProjectCard
-                    key={project.id || project.title}
-                    project={project}
-                    aspectRatio={isShorts ? "aspect-[9/16]" : "aspect-[16/9.5]"}
-                    onSelect={setSelectedProject}
-                  />
-                ))}
-              </motion.div>
+              {displayProjects.length === 0 ? (
+                /* ── Explicit Empty State Animated ───────────────────────── */
+                <motion.div
+                  key={`empty-${activeTab}`}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  className="py-20 px-4 rounded-2xl bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-center gap-3"
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted">
+                    <Film size={20} />
+                  </div>
+                  <h3 className="text-base font-semibold text-foreground">
+                    No {isShorts ? "Shorts & Reels" : "Long-Form"} projects found
+                  </h3>
+                  <p className="text-xs text-muted max-w-sm">
+                    Featured showcase slots have not been configured yet in the admin panel.
+                  </p>
+                </motion.div>
+              ) : (
+                /* ── Projects Grid with Smooth Stagger ──────────────────── */
+                <motion.div
+                  key={`grid-${activeTab}`}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.08,
+                        duration: 0.3,
+                      },
+                    },
+                    exit: {
+                      opacity: 0,
+                      transition: { duration: 0.25, ease: "easeInOut" },
+                    },
+                  }}
+                  className={
+                    isShorts
+                      ? "grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
+                      : "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10 md:gap-y-12"
+                  }
+                >
+                  {displayProjects.map((project, idx) => (
+                    <motion.div
+                      key={project.id || project.title}
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        visible: {
+                          opacity: 1,
+                          y: 0,
+                          transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+                        },
+                        exit: {
+                          opacity: 0,
+                          y: -10,
+                          transition: { duration: 0.2 },
+                        },
+                      }}
+                      className="will-change-transform"
+                    >
+                      <ProjectCard
+                        project={project}
+                        index={idx}
+                        aspectRatio={isShorts ? "aspect-[9/16]" : "aspect-[16/9.5]"}
+                        onSelect={setSelectedProject}
+                      />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
         )}

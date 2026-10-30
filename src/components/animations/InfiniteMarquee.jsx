@@ -23,11 +23,17 @@ export default function InfiniteMarquee({
   speed = 45, // pixels per second
   gap = "gap-5 sm:gap-6",
   pauseOnHover = false,
+  isPlaying = true,
   className = "",
 }) {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const isPaused = useRef(false);
+  const isPlayingRef = useRef(isPlaying);
+
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -49,12 +55,13 @@ export default function InfiniteMarquee({
 
     // Initial offset based on direction
     let offset = direction === "right" ? -width : 0;
+    track.style.transform = `translate3d(${offset}px, 0, 0)`;
 
     const animate = (time) => {
       const delta = (time - lastTime) / 1000;
       lastTime = time;
 
-      if (!isPaused.current && width > 0) {
+      if (isPlayingRef.current && !isPaused.current && width > 0) {
         if (direction === "left") {
           offset -= speed * delta;
           if (Math.abs(offset) >= width) {
@@ -168,18 +175,18 @@ export default function InfiniteMarquee({
         style={{ transform: "translate3d(0, 0, 0)" }}
       >
         {/* Render 3 identical blocks to ensure gapless infinite loop */}
-        <div className={`flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}>
+        <div className={`marquee-block flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}>
           {children || renderItems()}
         </div>
         <div
           aria-hidden="true"
-          className={`flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}
+          className={`marquee-block flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}
         >
           {children || renderItems()}
         </div>
         <div
           aria-hidden="true"
-          className={`flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}
+          className={`marquee-block flex items-center shrink-0 pr-5 sm:pr-6 ${gap}`}
         >
           {children || renderItems()}
         </div>

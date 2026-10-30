@@ -12,6 +12,7 @@ export default function ViewerReactions({
   reactions = [],
   direction = "right",
   speed = 40,
+  isPlaying = true,
   className = "",
 }) {
   if (!reactions || reactions.length === 0) return null;
@@ -22,10 +23,13 @@ export default function ViewerReactions({
         direction={direction}
         speed={speed}
         gap="gap-3.5 sm:gap-4"
+        isPlaying={isPlaying}
         className="overflow-visible"
       >
         {reactions.map((item) => (
-          <CommentCard key={item.id || item.username} comment={item} />
+          <div key={item.id || item.username} className="reaction-card-item shrink-0">
+            <CommentCard comment={item} />
+          </div>
         ))}
       </InfiniteMarquee>
     </div>
