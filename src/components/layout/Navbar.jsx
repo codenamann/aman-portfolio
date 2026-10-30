@@ -9,18 +9,17 @@ import { Menu, X, Calendar, Mail, ArrowRight, ChevronDown } from "lucide-react";
 import { InstagramIcon } from "hugeicons-react";
 import { FaYoutube } from "react-icons/fa6";
 import ContactDropdown from "./ContactDropdown";
+import Button from "@/components/ui/Button";
 
-export default function Navbar({
-  brand,
-  links = siteConfig.navLinks,
-}) {
+export default function Navbar({ brand, links = siteConfig.navLinks }) {
   const [open, setOpen] = useState(false);
   const [showMobileContact, setShowMobileContact] = useState(false);
   const pathname = usePathname();
 
   const activeBrand = brand || {};
   const displayName = activeBrand.displayName || activeBrand.name || "Aman";
-  const avatar = activeBrand.avatar || activeBrand.image || "/passport-picture.png";
+  const avatar =
+    activeBrand.avatar || activeBrand.image || "/passport-picture.png";
 
   const instagramUrl =
     activeBrand.socialLinks?.find((s) => s.platform === "instagram")?.url ||
@@ -37,10 +36,11 @@ export default function Navbar({
   const emailValue =
     typeof activeBrand.email === "string"
       ? activeBrand.email
-      : activeBrand.email?.value || activeBrand.email?.href?.replace("mailto:", "") || "";
+      : activeBrand.email?.value ||
+        activeBrand.email?.href?.replace("mailto:", "") ||
+        "";
 
-  const bookingUrl =
-    activeBrand.bookingUrl || activeBrand.call?.href || "";
+  const bookingUrl = activeBrand.bookingUrl || activeBrand.call?.href || "";
 
   const contactOptions = [
     bookingUrl && {
@@ -65,7 +65,6 @@ export default function Navbar({
       isExternal: false,
     },
   ].filter(Boolean);
-
 
   const handleCloseMobile = () => {
     setOpen(false);
@@ -141,8 +140,8 @@ export default function Navbar({
                   key={l.key || l.label}
                   className={`h-8 px-3.5 rounded-full border flex items-center justify-center text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer shadow-sm ${
                     isActive
-                      ? "border-accent/40 bg-accent/15 text-accent"
-                      : "border-white/15 bg-white/4 hover:bg-white/8 hover:border-accent/30 text-foreground/80 hover:text-accent"
+                      ? "border-accent bg-accent text-white shadow-[inset_1px_1px_2px_rgba(255,255,255,0.4),0_6px_10px_color-mix(in_srgb,var(--color-accent)30%,transparent_0%)] hover:opacity-95"
+                      : "border-white/15 bg-white/4 hover:bg-white/8 hover:border-black/10 text-foreground/80 hover:text-accent"
                   }`}
                 >
                   {l.label}
@@ -152,7 +151,7 @@ export default function Navbar({
           </div>
 
           {/* Social Profile Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 rounded-full px-1.5 py-[3.5px] border border-white/15 bg-white/4">
             {/* Instagram Button */}
             {instagramUrl && (
               <a
@@ -160,7 +159,7 @@ export default function Navbar({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aman on Instagram"
-                className="w-8 h-8 rounded-full border border-white/15 bg-white/4 hover:bg-white/8 hover:border-accent/30 flex items-center justify-center text-foreground/80 hover:text-accent transition-colors duration-200 cursor-pointer shadow-sm"
+                className="w-6 h-6 rounded-full border border-transparent bg-white/4 hover:bg-white/8 hover:border-black/10 flex items-center justify-center text-foreground/80 hover:text-accent transition-colors duration-200 cursor-pointer shadow-sm"
               >
                 <InstagramIcon size={14} className="shrink-0" />
               </a>
@@ -173,7 +172,7 @@ export default function Navbar({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Aman on YouTube"
-                className="w-8 h-8 rounded-full border border-white/15 bg-white/4 hover:bg-white/8 hover:border-accent/30 flex items-center justify-center text-foreground/80 hover:text-accent transition-colors duration-200 cursor-pointer shadow-sm"
+                className="w-6 h-6 rounded-full border border-transparent bg-white/4 hover:bg-white/8 hover:border-black/10 flex items-center justify-center text-foreground/80 hover:text-accent transition-colors duration-200 cursor-pointer shadow-sm"
               >
                 <FaYoutube size={14} className="shrink-0" />
               </a>
@@ -298,11 +297,13 @@ export default function Navbar({
                 )}
               </div>
 
-              {/* BOOK Accordion Toggle Button */}
-              <button
+              {/* BOOK Accordion Toggle Button with matching inset & shadow */}
+              <Button
                 type="button"
+                variant="pill"
+                color="red"
                 onClick={() => setShowMobileContact((prev) => !prev)}
-                className="group relative cursor-pointer select-none rounded-full bg-accent px-4 py-2 text-xs font-bold tracking-wider text-white shadow-md shadow-accent/25 flex items-center gap-2 transition-all active:scale-95"
+                className="px-4 py-2 text-xs font-bold tracking-wider text-white gap-2"
               >
                 <span>BOOK</span>
                 <span className="relative flex h-2 w-2 items-center justify-center">
@@ -316,7 +317,7 @@ export default function Navbar({
                   }`}
                   aria-hidden="true"
                 />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -53,7 +53,7 @@ function buildJellyRevealPath(w, edgeY, centerY) {
 /**
  * Captures an isolated, frozen visual snapshot of the outgoing page (#page-main)
  * with production safeguards:
- * - Omits fixed headers, navbars, and cursor followers to prevent visual duplication.
+ * - Preserves header in stage at viewport top, so it disappears with the outgoing page as the jelly curtain lifts.
  * - Compensates exact scroll position via translate3d(0, -scrollY, 0).
  * - Copies video currentTime and canvas buffers.
  * - Strips duplicate IDs and marks non-interactive (pointer-events: none, aria-hidden: true).
@@ -68,12 +68,12 @@ function captureOutgoingSnapshot(sourceEl, scrollY) {
   snapshotWrapper.id = "page-transition-outgoing-snapshot";
   snapshotWrapper.setAttribute("aria-hidden", "true");
   snapshotWrapper.className =
-    "fixed inset-0 w-screen h-screen pointer-events-none select-none z-[99990] overflow-hidden will-change-transform";
+    "fixed inset-0 w-full h-full pointer-events-none select-none z-[99990] overflow-hidden will-change-transform";
   snapshotWrapper.style.filter = "drop-shadow(0 25px 40px rgba(0, 0, 0, 0.85))";
 
   // 2. Clipped stage layer driven by the dynamic SVG clip-path
   const stage = document.createElement("div");
-  stage.className = "w-full h-full overflow-hidden will-change-transform";
+  stage.className = "w-full h-full relative overflow-hidden will-change-transform";
   stage.style.backgroundColor = "#111113";
   stage.style.clipPath = "url(#outgoing-jelly-clip)";
   stage.style.webkitClipPath = "url(#outgoing-jelly-clip)";
@@ -93,11 +93,18 @@ function captureOutgoingSnapshot(sourceEl, scrollY) {
     el.removeAttribute("id");
   });
 
-  // (b) Remove fixed navigation, cursor ball, and floating overlays so they do not lift away
-  const fixedElements = clone.querySelectorAll(
-    "header, nav, #cursor-ball, [data-cursor-ball], .fixed"
+  // (b) Extract header so it sits at viewport top in stage, lifting away with the outgoing page
+  const clonedHeader = clone.querySelector("header");
+  if (clonedHeader) {
+    clonedHeader.remove();
+    stage.appendChild(clonedHeader);
+  }
+
+  // (c) Remove cursor follower and floating overlays so they do not duplicate
+  const floatingElements = clone.querySelectorAll(
+    "#cursor-ball, [data-cursor-ball]"
   );
-  fixedElements.forEach((el) => {
+  floatingElements.forEach((el) => {
     el.remove();
   });
 
@@ -176,14 +183,16 @@ export default function PageTransition({ children }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const updateDims = () => {
+      const clientWidth =
+        document.documentElement.clientWidth || window.innerWidth;
       dimsRef.current = {
-        width: window.innerWidth,
+        width: clientWidth,
         height: window.innerHeight,
       };
       if (clipPathRef.current && stateRef.current === "idle") {
         clipPathRef.current.setAttribute(
           "d",
-          buildJellyRevealPath(window.innerWidth, window.innerHeight, window.innerHeight)
+          buildJellyRevealPath(clientWidth, window.innerHeight, window.innerHeight)
         );
       }
     };
@@ -196,7 +205,6 @@ export default function PageTransition({ children }) {
    * Helper to safely unlock body and resume Lenis scroll
    */
   const resumeScrollAndUnlock = useCallback(() => {
-    document.body.style.overflow = "";
     document.body.style.touchAction = "";
     if (typeof window !== "undefined" && window.__lenis) {
       try {
@@ -206,10 +214,9 @@ export default function PageTransition({ children }) {
   }, []);
 
   /**
-   * Helper to safely stop Lenis and lock body scroll
+   * Helper to safely stop Lenis and lock body scroll without scrollbar shift
    */
   const pauseScrollAndLock = useCallback(() => {
-    document.body.style.overflow = "hidden";
     document.body.style.touchAction = "none";
     if (typeof window !== "undefined" && window.__lenis) {
       try {
@@ -244,11 +251,6 @@ export default function PageTransition({ children }) {
 
     stateRef.current = "recovering";
     setTransitionState("recovering");
-
-    if (activeTimelineRef.current) {
-      activeTimelineRef.current.kill();
-      activeTimelineRef.current = null;
-    }
 
     if (activeSnapshotRef.current) {
       gsap.to(activeSnapshotRef.current, {

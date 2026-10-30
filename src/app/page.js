@@ -77,7 +77,7 @@ export default async function Home() {
       </main>
       <Footer profile={profile} />
       {/* bottom blur  */}
-      <div className="fixed bottom-0 z-50 w-screen h-30 pointer-events-none">
+      <div className="fixed bottom-0 inset-x-0 z-50 w-full h-30 pointer-events-none">
         <div className="absolute inset-0 backdrop-blur-[2px] [mask-image:linear-gradient(to_bottom,transparent,black)]" />
         <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_40%,black)]" />
         <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_70%,black)]" />

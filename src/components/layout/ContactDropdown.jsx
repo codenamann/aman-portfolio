@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Calendar, Mail, ArrowRight, ChevronDown } from "lucide-react";
 import { FaInstagram } from "react-icons/fa6";
 import { person } from "@/data/person";
+import Button from "@/components/ui/Button";
 
 export default function ContactDropdown({
   brand,
@@ -15,16 +16,24 @@ export default function ContactDropdown({
   const containerRef = useRef(null);
 
   const activeBrand = brand || {};
-  const bookingUrl = activeBrand.bookingUrl || activeBrand.call?.href || (person?.call?.href || "");
+  const bookingUrl =
+    activeBrand.bookingUrl ||
+    activeBrand.call?.href ||
+    person?.call?.href ||
+    "";
   const instagramUrl =
     activeBrand.socialLinks?.find((s) => s.platform === "instagram")?.url ||
     activeBrand.instagram?.href ||
     activeBrand.instagramUrl ||
-    (person?.instagram?.href || "");
+    person?.instagram?.href ||
+    "";
   const emailValue =
     typeof activeBrand.email === "string"
       ? activeBrand.email
-      : activeBrand.email?.value || activeBrand.email?.href?.replace("mailto:", "") || (person?.email?.value || "");
+      : activeBrand.email?.value ||
+        activeBrand.email?.href?.replace("mailto:", "") ||
+        person?.email?.value ||
+        "";
 
   // Close on outside click or Escape key
   useEffect(() => {
@@ -79,13 +88,15 @@ export default function ContactDropdown({
 
   return (
     <div ref={containerRef} className={`relative inline-block ${className}`}>
-      {/* ── Trigger Button: "BOOK ⚪ ⌄" ─────────────────────────────────── */}
-      <button
+      {/* ── Trigger Button: "BOOK ⚪ ⌄" with matching inset & shadow ──────────────── */}
+      <Button
         type="button"
+        variant="pill"
+        color="red"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-haspopup="true"
-        className="group relative cursor-pointer select-none rounded-full bg-accent px-3.5 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold tracking-wider text-white shadow-md shadow-accent/25 transition-all duration-200 hover:brightness-110 active:scale-95 flex items-center gap-2 sm:gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="px-3 sm:px-4 py-2 sm:py-[9px] text-xs sm:text-sm font-bold tracking-wider text-white gap-2 sm:gap-2.5"
       >
         <span className="leading-none">{buttonLabel}</span>
 
@@ -103,7 +114,7 @@ export default function ContactDropdown({
           }`}
           aria-hidden="true"
         />
-      </button>
+      </Button>
 
       {/* ── Floating Accordion / Dropdown Menu Card ─────────────────────── */}
       <AnimatePresence>
