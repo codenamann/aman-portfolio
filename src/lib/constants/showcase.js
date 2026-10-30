@@ -2,43 +2,50 @@ import { PROJECT_FORMATS } from "./limits";
 
 /**
  * 5 Canonical Showcase Slot Definitions for Projects Archive
+ * Represents the 5 Top Selected Films displayed in the full-width cinematic movie carousel.
  */
 export const SHOWCASE_SLOTS = {
-  spotlight: {
-    key: "spotlight",
+  slot1: {
+    key: "slot1",
     slotNumber: 1,
-    label: "SLOT 1 — SPOTLIGHT / HERO",
+    label: "SLOT 1 — FEATURED FILM #1",
     format: PROJECT_FORMATS.LONG_FORM,
-    description: "Primary Hero feature at the top of the Projects Archive.",
+    description: "First slide in the full-width cinematic movie carousel.",
+    aliases: ["spotlight"],
   },
-  secondaryLongForm: {
-    key: "secondaryLongForm",
+  slot2: {
+    key: "slot2",
     slotNumber: 2,
-    label: "SLOT 2 — SECONDARY LONG-FORM",
+    label: "SLOT 2 — FEATURED FILM #2",
     format: PROJECT_FORMATS.LONG_FORM,
-    description: "Prominent landscape feature in the asymmetric duo row.",
+    description: "Second slide in the full-width cinematic movie carousel.",
+    aliases: ["secondaryLongForm"],
   },
-  shortOne: {
-    key: "shortOne",
+  slot3: {
+    key: "slot3",
     slotNumber: 3,
-    label: "SLOT 3 — SHORT-FORM #1",
-    format: PROJECT_FORMATS.SHORT_FORM,
-    description: "First vertical video card in the asymmetric duo row.",
-  },
-  shortTwo: {
-    key: "shortTwo",
-    slotNumber: 4,
-    label: "SLOT 4 — SHORT-FORM #2",
-    format: PROJECT_FORMATS.SHORT_FORM,
-    description: "Second vertical video card in the asymmetric duo row.",
-  },
-  tertiaryLongForm: {
-    key: "tertiaryLongForm",
-    slotNumber: 5,
-    label: "SLOT 5 — TERTIARY LONG-FORM",
+    label: "SLOT 3 — FEATURED FILM #3",
     format: PROJECT_FORMATS.LONG_FORM,
-    description: "Bottom landscape feature above the archives.",
+    description: "Third slide in the full-width cinematic movie carousel.",
+    aliases: ["shortOne"],
+  },
+  slot4: {
+    key: "slot4",
+    slotNumber: 4,
+    label: "SLOT 4 — FEATURED FILM #4",
+    format: PROJECT_FORMATS.LONG_FORM,
+    description: "Fourth slide in the full-width cinematic movie carousel.",
+    aliases: ["shortTwo"],
+  },
+  slot5: {
+    key: "slot5",
+    slotNumber: 5,
+    label: "SLOT 5 — FEATURED FILM #5",
+    format: PROJECT_FORMATS.LONG_FORM,
+    description: "Fifth slide in the full-width cinematic movie carousel.",
+    aliases: ["tertiaryLongForm"],
   },
 };
 
 export const SHOWCASE_SLOT_KEYS = Object.keys(SHOWCASE_SLOTS);
+

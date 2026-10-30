@@ -5,6 +5,8 @@ import {
   getFeaturedShowcase,
   getFeaturedShowcaseConfig,
   updateFeaturedShowcaseSlot,
+  toggleProjectInShowcase,
+  setCarouselOrder,
 } from "@/services/projects/getFeaturedShowcase";
 import { SHOWCASE_SLOT_KEYS } from "@/lib/constants/showcase";
 
@@ -34,8 +36,7 @@ export async function GET() {
 
 /**
  * PUT /api/admin/showcase
- * Body: { slotKey: string, projectId: string | null }
- * Updates a specific slot in content/featured-showcase
+ * Body: { slotKey: string, projectId: string | null } OR { action: "reorder", carouselIds: string[] }
  */
 export async function PUT(request) {
   try {
@@ -43,9 +44,103 @@ export async function PUT(request) {
     if (errorResponse) return errorResponse;
 
     const body = await request.json().catch(() => ({}));
-    const { slotKey, projectId } = body;
+    const { slotKey, projectId, action, carouselIds } = body;
 
-    if (!slotKey || !SHOWCASE_SLOT_KEYS.includes(slotKey)) {
+    // Action 1: Reorder full carousel list
+    if (action === "reorder" && Array.isArray(carouselIds)) {
+      await setCarouselOrder(carouselIds);
+
+      try {
+        revalidatePath("/projects");
+        revalidatePath("/admin/projects");
+      } catch (e) {}
+
+      const resolvedShowcase = await getFeaturedShowcase();
+
+      return NextResponse.json({
+        success: true,
+        message: "Carousel order updated.",
+        carouselIds,
+        showcase: resolvedShowcase,
+      });
+    }
+
+    // Action 2: Add project to carousel
+    if (action === "add" && projectId) {
+      const config = await getFeaturedShowcaseConfig();
+      const currentList = config.carouselIds || [];
+
+      if (!currentList.includes(projectId)) {
+        if (currentList.length >= 5) {
+          return NextResponse.json(
+            { success: false, error: "Maximum 5 films allowed in the cinema carousel." },
+            { status: 400 }
+          );
+        }
+        const updatedList = [...currentList, projectId];
+        await setCarouselOrder(updatedList);
+      }
+
+      try {
+        revalidatePath("/projects");
+        revalidatePath("/admin/projects");
+      } catch (e) {}
+
+      const resolvedShowcase = await getFeaturedShowcase();
+      return NextResponse.json({
+        success: true,
+        message: "Project added to carousel.",
+        showcase: resolvedShowcase,
+      });
+    }
+
+    // Action 3: Remove project from carousel
+    if (action === "remove" && projectId) {
+      const config = await getFeaturedShowcaseConfig();
+      const currentList = config.carouselIds || [];
+      const updatedList = currentList.filter((id) => id !== projectId);
+      await setCarouselOrder(updatedList);
+
+      try {
+        revalidatePath("/projects");
+        revalidatePath("/admin/projects");
+      } catch (e) {}
+
+      const resolvedShowcase = await getFeaturedShowcase();
+      return NextResponse.json({
+        success: true,
+        message: "Project removed from carousel.",
+        showcase: resolvedShowcase,
+      });
+    }
+
+    // Action 4: Quick toggle long-form project in cinema carousel
+    if (action === "toggle" && projectId) {
+      const toggleResult = await toggleProjectInShowcase(projectId);
+
+      try {
+        revalidatePath("/projects");
+        revalidatePath("/admin/projects");
+      } catch (e) {}
+
+      const resolvedShowcase = await getFeaturedShowcase();
+
+      return NextResponse.json({
+        success: true,
+        action: toggleResult.action,
+        slotNumber: toggleResult.slotNumber,
+        carouselIds: toggleResult.carouselIds,
+        message:
+          toggleResult.action === "added"
+            ? `Project added to Cinema Carousel (Slot ${toggleResult.slotNumber}).`
+            : `Project removed from Cinema Carousel.`,
+        config: toggleResult.config,
+        showcase: resolvedShowcase,
+      });
+    }
+
+    const validKeys = [...SHOWCASE_SLOT_KEYS, "spotlight", "secondaryLongForm", "shortOne", "shortTwo", "tertiaryLongForm"];
+    if (!slotKey || !validKeys.includes(slotKey)) {
       return NextResponse.json(
         {
           success: false,

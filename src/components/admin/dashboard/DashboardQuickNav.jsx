@@ -7,18 +7,18 @@ import { Sparkles, Layers, FileText } from "lucide-react";
 export default function DashboardQuickNav() {
   const links = [
     {
-      href: "/admin/featured",
-      title: "Homepage Featured (4+4)",
+      href: "/admin/projects?tab=landing",
+      title: "Landing Page Featured (4+4)",
       description:
-        "Curate the 4 shorts and 4 long-form videos featured on the homepage hero/feed.",
+        "Curate the 4 long-form films and 4 shorts featured on the homepage hero/feed.",
       icon: Sparkles,
       iconClass: "bg-[#e90c47]/10 text-[#e90c47]",
     },
     {
-      href: "/admin/showcase",
-      title: "Archive Showcase (5 Slots)",
+      href: "/admin/projects?tab=carousel",
+      title: "Projects Carousel (5 Films)",
       description:
-        "Manage the 5-slot editorial hero banner featured at the top of the Projects Archive.",
+        "Manage the 5-film cinematic movie carousel featured at the top of the Projects Archive.",
       icon: Sparkles,
       iconClass: "bg-blue-500/10 text-blue-400",
     },

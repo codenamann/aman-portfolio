@@ -3,9 +3,10 @@
 import { useState, useMemo } from "react";
 import { AlertCircle, Film } from "lucide-react";
 import ProjectVideoModal from "./ProjectVideoModal";
-import FeaturedShowcase from "./FeaturedShowcase";
 import LongFormSection from "./LongFormSection";
 import ShortFormSection from "./ShortFormSection";
+import CinematicHeroCarousel from "./CinematicHeroCarousel";
+import ShortsInfiniteMarquee from "./ShortsInfiniteMarquee";
 
 export default function ProjectsArchive({
   initialProjects = [],
@@ -13,17 +14,6 @@ export default function ProjectsArchive({
   error = null,
 }) {
   const [selectedProject, setSelectedProject] = useState(null);
-
-  // Safe reference to server-resolved 5-slot featured showcase
-  const resolvedShowcase = useMemo(() => {
-    if (featuredShowcase) return featuredShowcase;
-    return {
-      spotlight: null,
-      secondaryLongForm: null,
-      tertiaryLongForm: null,
-      shorts: [],
-    };
-  }, [featuredShowcase]);
 
   // 2. All Long-form videos
   const longFormProjects = useMemo(() => {
@@ -40,34 +30,63 @@ export default function ProjectsArchive({
     );
   }, [initialProjects]);
 
+  // 4. Top 5 Showcase Projects for the Full-Width Movie Carousel
+  const topFiveProjects = useMemo(() => {
+    if (
+      featuredShowcase?.topProjects &&
+      featuredShowcase.topProjects.length > 0
+    ) {
+      return featuredShowcase.topProjects;
+    }
+    if (longFormProjects.length > 0) {
+      return longFormProjects.slice(0, 5);
+    }
+    return (initialProjects || []).slice(0, 5);
+  }, [featuredShowcase, longFormProjects, initialProjects]);
+
   return (
-    <div className="relative w-full bg-background min-h-screen pt-32 sm:pt-36 md:pt-44 pb-28 md:pb-40 overflow-hidden">
-      {/* ── Ambient Radial Glow ─────────────────────────────────────────── */}
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute top-1/3 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[160px] pointer-events-none -z-10" />
+    <div className="relative w-full bg-[#111113] min-h-screen pt-28 sm:pt-32 md:pt-33.75 pb-24 md:pb-36 overflow-hidden">
+      {/* ── Hero Heading matching reference ────────────────────────────── */}
+      <div className="w-full px-4 sm:px-6 flex flex-col items-center text-center max-w-4xl mx-auto">
+        <h1 className="font-display font-bold text-[30px] sm:text-[36px] md:text-[40px] lg:text-6xl tracking-tight leading-[1.12] select-none text-white">
+          Projects That <span className="text-[#ea0044]">Shape</span>
+          <br />
+          <span className="text-[#ea0044]">Ideas into Identity</span>
+        </h1>
 
-      <div className="section-container section-px flex flex-col gap-18">
-        {/* ── High-Impact Page Header ──────────────────────────────────────── */}
-        <div className="flex flex-col gap-6 md:gap-8 border-b border-border/50 py-12 md:py-20">
-          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
-            <h1 className="font-display font-black text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground tracking-tighter leading-[0.88] select-none">
-              SELECTED
-              <br />
-              <span className="text-accent">WORK</span>
-            </h1>
+        <p className="mt-5 text-[13px] text-balance sm:text-[14px] md:text-[20px] text-[#a1a1aa] leading-normal max-w-[440px] sm:max-w-[550px] mx-auto select-none">
+          Strategic design approach focused on clarity, helping brands grow
+          through consistent, and meaningful visual systems.
+        </p>
+      </div>
 
-            <div className="flex flex-col gap-3 max-w-md lg:text-right">
-              <p className="font-sans text-sm md:text-md lg:text-[1.3rem] text-balance  text-foreground/80 leading-normal">
-                Curated portfolio showcasing long-form storytelling edits and
-                retention-driven vertical shorts.
-              </p>
-              <div className="text-xs font-mono text-muted uppercase tracking-wider">
-                [{initialProjects.length} CURATED PROJECTS]
-              </div>
-            </div>
-          </div>
+      {/* ── Full-Bleed Horizontal Divider with Centered Accent Dot ───────── */}
+      <div className="relative w-full flex items-center justify-center mt-11 mb-11">
+        <div className="w-full h-px bg-[#282828]" />
+      </div>
+
+      {/* ── BIG FULL-WIDTH LONG-FORM MOVIE CAROUSEL ──────────────────────── */}
+      {topFiveProjects.length > 0 && (
+        <div className="w-full max-w-5xl mx-auto section-px mb-12 sm:mb-16">
+          <CinematicHeroCarousel
+            projects={topFiveProjects}
+            onSelectProject={setSelectedProject}
+          />
         </div>
+      )}
 
+      {/* ── FULL-SCREEN SHORTS INFINITE MARQUEE WITH SMOKY GRADIENT FRAMING ── */}
+      {shortProjects.length > 0 && (
+        <div className="w-full mb-16 sm:mb-20">
+          <ShortsInfiniteMarquee
+            projects={shortProjects}
+            onSelectProject={setSelectedProject}
+          />
+        </div>
+      )}
+
+      {/* ── Main Content Container ───────────────────────────────────────── */}
+      <div className="section-container section-px flex flex-col gap-14 sm:gap-18">
         {/* ── Error State ─────────────────────────────────────────────────── */}
         {error ? (
           <div className="p-8 rounded-2xl bg-red-500/10 border border-red-500/20 text-center flex flex-col items-center justify-center gap-3 my-12">
@@ -84,23 +103,13 @@ export default function ProjectsArchive({
               No projects found in the archive
             </h3>
             <p className="text-xs text-muted max-w-md">
-              Projects will appear here once they are added and published in the admin panel.
+              Projects will appear here once they are added and published in the
+              admin panel.
             </p>
           </div>
         ) : (
           <>
-            {/* ── SECTION 1: Featured Showcase (Top Bento) ─────────────────── */}
-            {(resolvedShowcase.spotlight ||
-              resolvedShowcase.secondaryLongForm ||
-              resolvedShowcase.shorts?.length > 0 ||
-              resolvedShowcase.tertiaryLongForm) && (
-              <FeaturedShowcase
-                featuredShowcase={resolvedShowcase}
-                onSelectProject={setSelectedProject}
-              />
-            )}
-
-            {/* ── SECTION 2: Dedicated Long-Form Films ──────────────────────── */}
+            {/* ── Dedicated Long-Form Films ────────────────────────────────── */}
             {longFormProjects.length > 0 && (
               <LongFormSection
                 projects={longFormProjects}
@@ -108,7 +117,7 @@ export default function ProjectsArchive({
               />
             )}
 
-            {/* ── SECTION 3: Dedicated Vertical Shorts & Reels ──────────────── */}
+            {/* ── Dedicated Vertical Shorts & Reels ────────────────────────── */}
             {shortProjects.length > 0 && (
               <ShortFormSection
                 projects={shortProjects}
@@ -127,4 +136,3 @@ export default function ProjectsArchive({
     </div>
   );
 }
-

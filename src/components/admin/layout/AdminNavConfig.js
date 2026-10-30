@@ -22,16 +22,7 @@ export const ADMIN_NAV_ITEMS = [
     label: "Projects",
     icon: Film,
   },
-  {
-    href: "/admin/featured",
-    label: "Homepage Featured",
-    icon: Sparkles,
-  },
-  {
-    href: "/admin/showcase",
-    label: "Archive Showcase",
-    icon: Layers,
-  },
+
   {
     href: "/admin/content",
     label: "Content & Bio",

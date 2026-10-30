@@ -7,7 +7,7 @@ import { getFeaturedShowcase } from "@/services/projects/getFeaturedShowcase";
 import { getContent } from "@/services/content/getContent";
 
 export const metadata = {
-  title: "Projects & Work Archive | Aman Shrivastava",
+  title: "Projects | Aman Shrivastava",
   description:
     "Explore long-form video editing, motion design, YouTube shorts, and creative packaging identity projects by Aman Shrivastava.",
 };

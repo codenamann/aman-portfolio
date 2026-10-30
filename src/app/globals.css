@@ -225,3 +225,28 @@ body {
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
 }
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   INFINITE MARQUEE ANIMATION
+   Smooth GPU-accelerated horizontal scrolling with pause on hover
+───────────────────────────────────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-scroll {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-scroll:hover {
+  animation-play-state: paused;
+}
+
+

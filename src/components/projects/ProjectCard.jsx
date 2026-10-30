@@ -172,7 +172,7 @@ export default function ProjectCard({
             src={thumbnailSrc}
             alt={project.title}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             onError={handleImageError}
             className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
           />
@@ -181,8 +181,8 @@ export default function ProjectCard({
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-black/40 opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
 
           {/* Top Platform Badge */}
-          <div className="absolute top-3.5 left-3.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[11px] font-medium text-white/90">
-            <FaYoutube className="w-3 h-3 text-accent" />
+          <div className="absolute top-2.5 sm:top-3.5 left-2.5 sm:left-3.5 z-10 flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-[10px] sm:text-[11px] font-medium text-white/90">
+            <FaYoutube className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-accent" />
             <span>Short</span>
           </div>
 
@@ -193,27 +193,27 @@ export default function ProjectCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="absolute top-3.5 right-3.5 z-20 flex items-center justify-center w-7 h-7 rounded-full bg-black/60 hover:bg-[#e1306c] text-white/90 backdrop-blur-md border border-white/10 transition-colors cursor-pointer"
+              className="absolute top-2.5 sm:top-3.5 right-2.5 sm:right-3.5 z-20 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/60 hover:bg-[#e1306c] text-white/90 backdrop-blur-md border border-white/10 transition-colors cursor-pointer"
               title="Open Reel on Instagram"
               aria-label={`Open ${project.title} on Instagram`}
             >
-              <FaInstagram className="w-3.5 h-3.5" />
+              <FaInstagram className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </a>
           )}
 
           {/* Center Play Icon */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            <div className="w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/40 group-hover:scale-110 transition-transform">
-              <FaPlay className="w-4 h-4 translate-x-0.5" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent text-white flex items-center justify-center shadow-lg shadow-accent/40 group-hover:scale-110 transition-transform">
+              <FaPlay className="w-3.5 h-3.5 sm:w-4 sm:h-4 translate-x-0.5" />
             </div>
           </div>
 
           {/* Bottom Card Caption */}
-          <div className="absolute bottom-4 inset-x-4 flex flex-col gap-1 pointer-events-none">
-            <h4 className="font-display font-bold text-sm md:text-[16px] lg:text-[20px] text-foreground leading-snug group-hover:text-accent transition-colors line-clamp-1">
+          <div className="absolute bottom-2.5 sm:bottom-4 inset-x-2.5 sm:inset-x-4 flex flex-col gap-0.5 sm:gap-1 pointer-events-none">
+            <h4 className="font-display font-bold text-xs sm:text-sm md:text-[15px] lg:text-[16px] text-foreground leading-snug group-hover:text-accent transition-colors line-clamp-1">
               {project.title}
             </h4>
-            <p className="text-xs text-muted/80 line-clamp-1">
+            <p className="text-[10px] sm:text-xs text-muted/80 line-clamp-1">
               {project.subtitle || project.category || "Vertical Short"}
             </p>
           </div>

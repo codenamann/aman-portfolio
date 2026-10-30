@@ -1,21 +1,8 @@
 import "server-only";
 import { adminDb } from "@/lib/firebase/admin";
-import { getProjects, normalizeProject } from "./getProjects";
+import { getProjects } from "./getProjects";
 import { PROJECT_FORMATS } from "@/lib/constants/limits";
-
 import { SHOWCASE_SLOTS, SHOWCASE_SLOT_KEYS } from "@/lib/constants/showcase";
-
-/**
- * Helper to safely extract milliseconds timestamp from createdAt
- */
-function getTimestamp(val) {
-  if (!val) return 0;
-  if (typeof val.toDate === "function") return val.toDate().getTime();
-  if (typeof val._seconds === "number") return val._seconds * 1000;
-  if (val instanceof Date) return val.getTime();
-  const parsed = new Date(val).getTime();
-  return isNaN(parsed) ? 0 : parsed;
-}
 
 /**
  * Retrieves the raw showcase configuration document from Firestore: content/featured-showcase
@@ -32,21 +19,34 @@ export async function getFeaturedShowcaseConfig() {
 
     if (!docSnap.exists) {
       return {
-        spotlight: null,
-        secondaryLongForm: null,
-        shortOne: null,
-        shortTwo: null,
-        tertiaryLongForm: null,
+        slot1: null,
+        slot2: null,
+        slot3: null,
+        slot4: null,
+        slot5: null,
+        carouselIds: [],
+        topFive: [],
       };
     }
 
     const data = docSnap.data() || {};
+
+    let carouselIds = Array.isArray(data.carouselIds) ? data.carouselIds : null;
+    if (!carouselIds) {
+      const rawSlots = [data.slot1, data.slot2, data.slot3, data.slot4, data.slot5]
+        .concat(Array.isArray(data.topFive) ? data.topFive : [])
+        .filter(Boolean);
+      carouselIds = Array.from(new Set(rawSlots)).slice(0, 5);
+    }
+
     return {
-      spotlight: data.spotlight || null,
-      secondaryLongForm: data.secondaryLongForm || null,
-      shortOne: data.shortOne || null,
-      shortTwo: data.shortTwo || null,
-      tertiaryLongForm: data.tertiaryLongForm || null,
+      slot1: carouselIds[0] || null,
+      slot2: carouselIds[1] || null,
+      slot3: carouselIds[2] || null,
+      slot4: carouselIds[3] || null,
+      slot5: carouselIds[4] || null,
+      carouselIds,
+      topFive: carouselIds,
       updatedAt: data.updatedAt || null,
     };
   } catch (err) {
@@ -56,18 +56,8 @@ export async function getFeaturedShowcaseConfig() {
 }
 
 /**
- * Resolves the 5 showcase slots using the configuration and a pool of published projects.
- *
- * RULES:
- * 1. Manual selections are assigned first.
- *    - If project exists and matches slot format, it is assigned (mode: 'manual') and its ID is marked as used.
- *    - If missing or deleted, marked as isMissing: true (mode: 'manual', project: null). NEVER silently replaced.
- * 2. Unassigned / automatic slots are resolved independently by format:
- *    - Long-form slots in order: Slot 1 (spotlight) -> Slot 2 (secondaryLongForm) -> Slot 5 (tertiaryLongForm)
- *    - Short-form slots in order: Slot 3 (shortOne) -> Slot 4 (shortTwo)
- *    - Sorted strictly by createdAt descending (newest first).
- *    - Excludes any already used project IDs (manual or previous automatic).
- *    - If no eligible projects left, slot resolves to null (empty, never duplicated).
+ * Resolves the 5 carousel slots using the configuration and a pool of published projects.
+ * Only projects explicitly in carouselIds are resolved. Unassigned slots remain empty.
  *
  * @param {Array<Object>} allProjects
  * @param {Object} config
@@ -81,41 +71,25 @@ export function resolveFeaturedShowcase(allProjects = [], config = {}) {
     }
   });
 
-  // Filter published projects by format and sort strictly by createdAt descending
-  const longFormPool = allProjects
-    .filter((p) => p.status === "published" && p.format === PROJECT_FORMATS.LONG_FORM)
-    .sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
+  const carouselIds = Array.isArray(config.carouselIds)
+    ? config.carouselIds
+    : [config.slot1, config.slot2, config.slot3, config.slot4, config.slot5].filter(Boolean);
 
-  const shortFormPool = allProjects
-    .filter((p) => p.status === "published" && p.format === PROJECT_FORMATS.SHORT_FORM)
-    .sort((a, b) => getTimestamp(b.createdAt) - getTimestamp(a.createdAt));
-
-  const usedProjectIds = new Set();
   const slotDetails = {};
+  const slotKeys = ["slot1", "slot2", "slot3", "slot4", "slot5"];
 
-  // Step 1: Pre-process manual selections to register all valid manual IDs in usedProjectIds
-  SHOWCASE_SLOT_KEYS.forEach((slotKey) => {
-    const assignedId = config[slotKey];
-    const slotDef = SHOWCASE_SLOTS[slotKey];
+  slotKeys.forEach((slotKey, idx) => {
+    const assignedId = carouselIds[idx] || null;
+    const slotDef = SHOWCASE_SLOTS[slotKey] || {
+      key: slotKey,
+      slotNumber: idx + 1,
+      label: `SLOT ${idx + 1}`,
+      format: PROJECT_FORMATS.LONG_FORM,
+    };
 
     if (assignedId) {
       const project = projectMap.get(assignedId);
-      if (project && project.format === slotDef.format && project.status === "published") {
-        usedProjectIds.add(assignedId);
-      }
-    }
-  });
-
-  // Step 2: Resolve Long-Form slots in priority order: spotlight (1) -> secondaryLongForm (2) -> tertiaryLongForm (5)
-  const longFormSlotKeys = ["spotlight", "secondaryLongForm", "tertiaryLongForm"];
-  longFormSlotKeys.forEach((slotKey) => {
-    const assignedId = config[slotKey];
-    const slotDef = SHOWCASE_SLOTS[slotKey];
-
-    if (assignedId) {
-      // Manual mode
-      const project = projectMap.get(assignedId);
-      if (!project || project.format !== slotDef.format || project.status !== "published") {
+      if (!project || project.status !== "published") {
         slotDetails[slotKey] = {
           slotKey,
           slotNumber: slotDef.slotNumber,
@@ -139,88 +113,32 @@ export function resolveFeaturedShowcase(allProjects = [], config = {}) {
         };
       }
     } else {
-      // Automatic mode: Pick newest unused long-form project
-      const autoProject = longFormPool.find((p) => !usedProjectIds.has(p.id)) || null;
-      if (autoProject) {
-        usedProjectIds.add(autoProject.id);
-      }
+      // Clean empty slot — never resurrect unwanted projects automatically!
       slotDetails[slotKey] = {
         slotKey,
         slotNumber: slotDef.slotNumber,
         label: slotDef.label,
         requiredFormat: slotDef.format,
-        mode: "automatic",
+        mode: "empty",
         isMissing: false,
         missingId: null,
-        project: autoProject,
+        project: null,
       };
     }
   });
 
-  // Step 3: Resolve Short-Form slots in priority order: shortOne (3) -> shortTwo (4)
-  const shortFormSlotKeys = ["shortOne", "shortTwo"];
-  shortFormSlotKeys.forEach((slotKey) => {
-    const assignedId = config[slotKey];
-    const slotDef = SHOWCASE_SLOTS[slotKey];
-
-    if (assignedId) {
-      // Manual mode
-      const project = projectMap.get(assignedId);
-      if (!project || project.format !== slotDef.format || project.status !== "published") {
-        slotDetails[slotKey] = {
-          slotKey,
-          slotNumber: slotDef.slotNumber,
-          label: slotDef.label,
-          requiredFormat: slotDef.format,
-          mode: "manual",
-          isMissing: true,
-          missingId: assignedId,
-          project: null,
-        };
-      } else {
-        slotDetails[slotKey] = {
-          slotKey,
-          slotNumber: slotDef.slotNumber,
-          label: slotDef.label,
-          requiredFormat: slotDef.format,
-          mode: "manual",
-          isMissing: false,
-          missingId: null,
-          project,
-        };
-      }
-    } else {
-      // Automatic mode: Pick newest unused short-form project
-      const autoProject = shortFormPool.find((p) => !usedProjectIds.has(p.id)) || null;
-      if (autoProject) {
-        usedProjectIds.add(autoProject.id);
-      }
-      slotDetails[slotKey] = {
-        slotKey,
-        slotNumber: slotDef.slotNumber,
-        label: slotDef.label,
-        requiredFormat: slotDef.format,
-        mode: "automatic",
-        isMissing: false,
-        missingId: null,
-        project: autoProject,
-      };
-    }
-  });
-
-  const spotlight = slotDetails.spotlight.project;
-  const secondaryLongForm = slotDetails.secondaryLongForm.project;
-  const shortOne = slotDetails.shortOne.project;
-  const shortTwo = slotDetails.shortTwo.project;
-  const tertiaryLongForm = slotDetails.tertiaryLongForm.project;
+  const topProjects = [
+    slotDetails.slot1?.project,
+    slotDetails.slot2?.project,
+    slotDetails.slot3?.project,
+    slotDetails.slot4?.project,
+    slotDetails.slot5?.project,
+  ].filter(Boolean);
 
   return {
-    spotlight,
-    secondaryLongForm,
-    shortOne,
-    shortTwo,
-    tertiaryLongForm,
-    shorts: [shortOne, shortTwo].filter(Boolean),
+    topProjects,
+    topFive: topProjects,
+    carouselIds,
     rawConfig: config,
     slotDetails,
   };
@@ -242,8 +160,8 @@ export async function getFeaturedShowcase() {
 /**
  * Updates a single slot in the showcase configuration.
  * @param {Object} params
- * @param {string} params.slotKey - "spotlight" | "secondaryLongForm" | "shortOne" | "shortTwo" | "tertiaryLongForm"
- * @param {string|null} params.projectId - ID of project or null for automatic
+ * @param {string} params.slotKey - "slot1" | "slot2" | "slot3" | "slot4" | "slot5"
+ * @param {string|null} params.projectId - ID of project or null to clear
  * @returns {Promise<Object>} Updated config
  */
 export async function updateFeaturedShowcaseSlot({ slotKey, projectId }) {
@@ -251,34 +169,147 @@ export async function updateFeaturedShowcaseSlot({ slotKey, projectId }) {
     throw new Error("[Showcase Service] Cloud Firestore Admin SDK is not configured.");
   }
 
-  if (!SHOWCASE_SLOTS[slotKey]) {
-    throw new Error(`[Showcase Service] Invalid slot key: ${slotKey}`);
-  }
+  const config = await getFeaturedShowcaseConfig();
+  let list = [...(config.carouselIds || [])];
 
-  const slotDef = SHOWCASE_SLOTS[slotKey];
+  const slotNumber = parseInt(slotKey.replace("slot", ""), 10);
+  const slotIndex = isNaN(slotNumber) ? 0 : slotNumber - 1;
 
-  // If assigning a project, validate that it exists and matches required format
   if (projectId) {
-    const projectDoc = await adminDb.collection("projects").doc(projectId).get();
-    if (!projectDoc.exists) {
-      throw new Error(`[Showcase Service] Project "${projectId}" does not exist in Firestore.`);
+    // Remove if already in another slot to avoid duplicates
+    list = list.filter((id) => id !== projectId);
+    while (list.length < slotIndex) {
+      list.push(null);
     }
-    const projectData = normalizeProject(projectDoc.data());
-    if (projectData.format !== slotDef.format) {
-      throw new Error(
-        `[Showcase Service] Format mismatch: Slot "${slotDef.label}" requires "${slotDef.format}", but project "${projectData.title}" is "${projectData.format}".`
-      );
+    list[slotIndex] = projectId;
+    list = list.filter(Boolean).slice(0, 5);
+  } else {
+    // Clear slot
+    if (slotIndex < list.length) {
+      list.splice(slotIndex, 1);
     }
   }
 
   const docRef = adminDb.collection("content").doc("featured-showcase");
-
   const updateData = {
-    [slotKey]: projectId || null,
+    carouselIds: list,
+    topFive: list,
+    slot1: list[0] || null,
+    slot2: list[1] || null,
+    slot3: list[2] || null,
+    slot4: list[3] || null,
+    slot5: list[4] || null,
+    spotlight: list[0] || null,
+    secondaryLongForm: list[1] || null,
+    shortOne: list[2] || null,
+    shortTwo: list[3] || null,
+    tertiaryLongForm: list[4] || null,
     updatedAt: new Date().toISOString(),
   };
 
-  await docRef.set(updateData, { merge: true });
+  await docRef.set(updateData);
 
   return await getFeaturedShowcaseConfig();
 }
+
+/**
+ * Toggles a long-form project in the cinema carousel.
+ * If already assigned to any slot (1-5), it is removed.
+ * If not in any slot, it is appended to carouselIds (up to 5).
+ * 
+ * @param {string} projectId
+ * @returns {Promise<{ action: "added" | "removed", slotNumber: number | null, carouselIds: string[], config: Object }>}
+ */
+export async function toggleProjectInShowcase(projectId) {
+  if (!adminDb) {
+    throw new Error("[Showcase Service] Cloud Firestore Admin SDK is not configured.");
+  }
+
+  const config = await getFeaturedShowcaseConfig();
+  let list = [...(config.carouselIds || [])];
+
+  const existingIdx = list.indexOf(projectId);
+  let action = "removed";
+  let slotNumber = null;
+
+  if (existingIdx !== -1) {
+    // Remove from carousel
+    list.splice(existingIdx, 1);
+    action = "removed";
+  } else {
+    // Check maximum 5
+    if (list.length >= 5) {
+      throw new Error("Carousel already has maximum 5 films. Remove one first.");
+    }
+    // Validate project in Firestore
+    const projectDoc = await adminDb.collection("projects").doc(projectId).get();
+    if (!projectDoc.exists) {
+      throw new Error(`Project "${projectId}" not found.`);
+    }
+    list.push(projectId);
+    action = "added";
+    slotNumber = list.length;
+  }
+
+  const docRef = adminDb.collection("content").doc("featured-showcase");
+  const updateData = {
+    carouselIds: list,
+    topFive: list,
+    slot1: list[0] || null,
+    slot2: list[1] || null,
+    slot3: list[2] || null,
+    slot4: list[3] || null,
+    slot5: list[4] || null,
+    spotlight: list[0] || null,
+    secondaryLongForm: list[1] || null,
+    shortOne: list[2] || null,
+    shortTwo: list[3] || null,
+    tertiaryLongForm: list[4] || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await docRef.set(updateData);
+
+  return {
+    action,
+    slotNumber,
+    carouselIds: list,
+    config: await getFeaturedShowcaseConfig(),
+  };
+}
+
+/**
+ * Updates the complete carousel order.
+ * @param {string[]} carouselIds - Array of project IDs in desired order (max 5)
+ * @returns {Promise<Object>}
+ */
+export async function setCarouselOrder(carouselIds = []) {
+  if (!adminDb) {
+    throw new Error("[Showcase Service] Cloud Firestore Admin SDK is not configured.");
+  }
+
+  const cleanIds = Array.isArray(carouselIds)
+    ? Array.from(new Set(carouselIds.filter(Boolean))).slice(0, 5)
+    : [];
+
+  const docRef = adminDb.collection("content").doc("featured-showcase");
+  const updateData = {
+    carouselIds: cleanIds,
+    topFive: cleanIds,
+    slot1: cleanIds[0] || null,
+    slot2: cleanIds[1] || null,
+    slot3: cleanIds[2] || null,
+    slot4: cleanIds[3] || null,
+    slot5: cleanIds[4] || null,
+    spotlight: cleanIds[0] || null,
+    secondaryLongForm: cleanIds[1] || null,
+    shortOne: cleanIds[2] || null,
+    shortTwo: cleanIds[3] || null,
+    tertiaryLongForm: cleanIds[4] || null,
+    updatedAt: new Date().toISOString(),
+  };
+
+  await docRef.set(updateData);
+  return await getFeaturedShowcaseConfig();
+}
+

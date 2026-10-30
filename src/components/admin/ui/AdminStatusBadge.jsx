@@ -9,22 +9,22 @@ export default function AdminStatusBadge({
 }) {
   const styles = {
     // Formats
-    "short-form": "bg-[#271d3b] text-[#d8b4fe] border border-[#3b2a5c]",
-    "long-form": "bg-[#172554] text-[#93c5fd] border border-[#1e3a8a]",
+    "short-form": "bg-[#18181a] text-zinc-300 border border-[#262628]",
+    "long-form": "bg-[#18181a] text-zinc-300 border border-[#262628]",
 
-    // Publication Status
-    published: "bg-[#064e3b] text-[#6ee7b7] border border-[#047857]",
-    draft: "bg-[#451a03] text-[#fcd34d] border border-[#78350f]",
-    archived: "bg-[#18181a] text-[#a1a1a6] border border-[#262628]",
+    // Publication Status (2 states: active published vs muted draft)
+    published: "bg-[#064e3b]/80 text-[#6ee7b7] border border-[#059669]/50 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] font-medium",
+    draft: "bg-[#18181a] text-zinc-400 border border-[#262628]",
+    archived: "bg-[#18181a] text-[#6f6f76] border border-[#262628]",
 
-    // Featured / Spotlight
-    featured: "bg-[#4c0519] text-[#fda4af] border border-[#881337] font-semibold",
-    spotlight: "bg-[#451a03] text-[#fcd34d] border border-[#78350f] font-semibold",
+    // Featured / Spotlight (clean neutral active)
+    featured: "bg-[#1f1f22] text-white border border-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] font-medium",
+    spotlight: "bg-[#1f1f22] text-white border border-zinc-700 shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)] font-medium",
 
     // Modes
-    automatic: "bg-[#064e3b] text-[#6ee7b7] border border-[#047857]",
-    manual: "bg-[#451a03] text-[#fcd34d] border border-[#78350f]",
-    missing: "bg-[#4c0519] text-[#fda4af] border border-[#881337]",
+    automatic: "bg-[#18181a] text-zinc-400 border border-[#262628]",
+    manual: "bg-[#1f1f22] text-white border border-zinc-700 font-medium",
+    missing: "bg-[#18181a] text-rose-400 border border-rose-900/40",
 
     // Default Neutral
     default: "bg-[#18181a] text-[#a1a1a6] border border-[#262628]",
