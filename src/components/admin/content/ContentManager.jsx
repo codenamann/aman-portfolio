@@ -3,16 +3,44 @@
 import { useState } from "react";
 import { Save, Loader2, Database, AlertCircle } from "lucide-react";
 import { useAdminToast } from "@/components/admin/ui/AdminToastProvider";
-import ProfileEditor from "./ProfileEditor";
-import AboutEditor from "./AboutEditor";
-import ServicesEditor from "./ServicesEditor";
-import CreativeToolsEditor from "./CreativeToolsEditor";
-import TestimonialsEditor from "./TestimonialsEditor";
-import ViewerReactionsEditor from "./ViewerReactionsEditor";
-import SocialProofEditor from "./SocialProofEditor";
-import FaqsEditor from "./FaqsEditor";
-import QuoteEditor from "./QuoteEditor";
+import dynamic from "next/dynamic";
 import { CONTENT_SECTIONS } from "@/lib/constants/limits";
+
+const SectionLoadingFallback = () => (
+  <div className="p-6 rounded-xl bg-[#151517] border border-[#262628] space-y-4 animate-pulse">
+    <div className="h-5 w-40 bg-[#1f1f22] rounded" />
+    <div className="h-10 w-full bg-[#18181a] rounded-lg" />
+    <div className="h-24 w-full bg-[#18181a] rounded-lg" />
+  </div>
+);
+
+const ProfileEditor = dynamic(() => import("./ProfileEditor"), {
+  loading: SectionLoadingFallback,
+});
+const AboutEditor = dynamic(() => import("./AboutEditor"), {
+  loading: SectionLoadingFallback,
+});
+const ServicesEditor = dynamic(() => import("./ServicesEditor"), {
+  loading: SectionLoadingFallback,
+});
+const CreativeToolsEditor = dynamic(() => import("./CreativeToolsEditor"), {
+  loading: SectionLoadingFallback,
+});
+const TestimonialsEditor = dynamic(() => import("./TestimonialsEditor"), {
+  loading: SectionLoadingFallback,
+});
+const ViewerReactionsEditor = dynamic(() => import("./ViewerReactionsEditor"), {
+  loading: SectionLoadingFallback,
+});
+const SocialProofEditor = dynamic(() => import("./SocialProofEditor"), {
+  loading: SectionLoadingFallback,
+});
+const FaqsEditor = dynamic(() => import("./FaqsEditor"), {
+  loading: SectionLoadingFallback,
+});
+const QuoteEditor = dynamic(() => import("./QuoteEditor"), {
+  loading: SectionLoadingFallback,
+});
 
 /**
  * Content Manager Orchestrator Component

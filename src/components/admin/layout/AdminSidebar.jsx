@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ExternalLink, LogOut, X } from "lucide-react";
+import { motion } from "motion/react";
 import { ADMIN_NAV_ITEMS } from "./AdminNavConfig";
 import AdminMobileNav from "./AdminMobileNav";
 import { person } from "@/data/person";
@@ -11,7 +12,7 @@ import Image from "next/image";
 
 /**
  * Responsive Admin Sidebar and Mobile Drawer Navigation
- * Uses solid surface tokens and level 2/3 elevation depth.
+ * Uses solid surface tokens, animated active pill indicator, and level 2/3 elevation depth.
  */
 export default function AdminSidebar({ user }) {
   const pathname = usePathname();
@@ -122,7 +123,7 @@ export default function AdminSidebar({ user }) {
           </button>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation Links with Animated Layout Pill */}
         <nav className="flex-1 px-3 py-4 sm:py-6 space-y-1 overflow-y-auto">
           {ADMIN_NAV_ITEMS.map((item) => {
             const Icon = item.icon;
@@ -132,19 +133,30 @@ export default function AdminSidebar({ user }) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-medium transition ${
+                className={`relative flex items-center gap-3 px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs sm:text-sm font-medium transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e90c47] ${
                   active
-                    ? "bg-[#1f1f22] text-[#f2f2f2] border border-[#333338] font-semibold"
-                    : "text-[#a1a1a6] hover:text-[#f2f2f2] hover:bg-[#18181a]"
+                    ? "text-[#f2f2f2] font-semibold"
+                    : "text-[#a1a1a6] hover:text-[#f2f2f2] hover:bg-[#18181a]/60"
                 }`}
               >
+                {active && (
+                  <motion.div
+                    layoutId="admin-nav-indicator"
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 35,
+                    }}
+                    className="absolute inset-0 rounded-xl bg-[#1f1f22] border border-[#333338] shadow-xs z-0"
+                  />
+                )}
                 <Icon
                   size={18}
-                  className={`shrink-0 ${
+                  className={`shrink-0 z-10 transition-colors ${
                     active ? "text-[#e90c47]" : "text-[#6f6f76]"
                   }`}
                 />
-                <span className="truncate">{item.label}</span>
+                <span className="truncate z-10">{item.label}</span>
               </Link>
             );
           })}

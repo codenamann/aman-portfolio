@@ -17,14 +17,14 @@ export default function AdminPageTransition({ children }) {
       key={pathname}
       initial={{
         opacity: shouldReduceMotion ? 1 : 0,
-        y: shouldReduceMotion ? 0 : 6,
+        y: shouldReduceMotion ? 0 : 4,
       }}
       animate={{
         opacity: 1,
         y: 0,
       }}
       transition={{
-        duration: 0.18,
+        duration: 0.16,
         ease: [0.16, 1, 0.3, 1],
       }}
       className="w-full min-w-0 flex-1 flex flex-col"

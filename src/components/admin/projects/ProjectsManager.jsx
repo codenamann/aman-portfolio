@@ -15,11 +15,24 @@ import AdminLoadingState from "@/components/admin/ui/AdminLoadingState";
 import AdminEmptyState from "@/components/admin/ui/AdminEmptyState";
 import AdminConfirmDialog from "@/components/admin/ui/AdminConfirmDialog";
 import { useAdminToast } from "@/components/admin/ui/AdminToastProvider";
+import dynamic from "next/dynamic";
 import ProjectsToolbar from "./ProjectsToolbar";
 import ProjectsTable from "./ProjectsTable";
 import ProjectsMobileList from "./ProjectsMobileList";
-import FeaturedSlotManager from "@/components/admin/featured/FeaturedSlotManager";
-import ArchiveShowcaseManager from "@/components/admin/showcase/ArchiveShowcaseManager";
+
+const FeaturedSlotManager = dynamic(
+  () => import("@/components/admin/featured/FeaturedSlotManager"),
+  {
+    loading: () => <AdminLoadingState message="Loading landing page curation..." />,
+  }
+);
+
+const ArchiveShowcaseManager = dynamic(
+  () => import("@/components/admin/showcase/ArchiveShowcaseManager"),
+  {
+    loading: () => <AdminLoadingState message="Loading movie carousel..." />,
+  }
+);
 
 function ProjectsManagerInner({ initialProjects = null, initialShowcase = null }) {
   const router = useRouter();

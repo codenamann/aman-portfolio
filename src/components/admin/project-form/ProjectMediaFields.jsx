@@ -3,12 +3,17 @@ import AdminFormField from "@/components/admin/ui/AdminFormField";
 import AdminInput from "@/components/admin/ui/AdminInput";
 import AdminSelect from "@/components/admin/ui/AdminSelect";
 import { PROJECT_FORMATS } from "@/lib/constants/limits";
+import { getYouTubeVideoId } from "@/lib/youtube";
 
 /**
  * Media Source & Platform Fieldset for Project Editor
  */
 export default function ProjectMediaFields({ formData, onChange }) {
   const isShortForm = formData.format === PROJECT_FORMATS.SHORT_FORM;
+  const youtubeId = getYouTubeVideoId(formData.videoUrl);
+  const previewThumbSrc =
+    formData.thumbnail ||
+    (youtubeId ? `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg` : null);
 
   return (
     <div className="p-4 sm:p-6 rounded-xl bg-[#151517] border border-[#262628] shadow-[0_1px_3px_rgba(0,0,0,0.5)] space-y-4">
@@ -113,18 +118,19 @@ export default function ProjectMediaFields({ formData, onChange }) {
       )}
 
       {/* Thumbnail Live Preview Box */}
-      {formData.thumbnail && (
+      {previewThumbSrc && (
         <div className="pt-2">
           <span className="text-[11px] font-mono text-[#a1a1a6] block mb-1.5">
-            Thumbnail Live Preview:
+            {formData.thumbnail ? "Custom Thumbnail Preview:" : "Auto YouTube Thumbnail Preview:"}
           </span>
           <div className="w-48 h-28 relative rounded-xl bg-[#111113] overflow-hidden border border-[#262628]">
             <Image
-              src={formData.thumbnail}
-              alt="Preview"
+              src={previewThumbSrc}
+              alt="Thumbnail preview"
               fill
               sizes="192px"
               className="object-cover"
+              unoptimized={previewThumbSrc.includes("ytimg.com")}
             />
           </div>
         </div>
