@@ -141,7 +141,7 @@ export default function CinematicHeroCarousel({
                     alt={project.title}
                     fill
                     priority={idx === 0}
-                    sizes="(max-width: 1200px) 100vw, 1152px"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
                     onError={() => {
                       if (
                         !project.thumbnail &&
@@ -224,6 +224,7 @@ export default function CinematicHeroCarousel({
                           href={videoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
+                          aria-label={`Open ${project.title} on YouTube`}
                           onMouseEnter={() => setIsPaused(true)}
                           onMouseLeave={() => setIsPaused(false)}
                           className="inline-flex items-center gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/20 active:scale-95 text-white text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer"
@@ -284,31 +285,36 @@ export default function CinematicHeroCarousel({
                   type="button"
                   onClick={() => goToSlide(idx)}
                   aria-label={`Go to slide ${idx + 1}: ${p.title}`}
-                  className="group relative h-1 sm:h-1.5 rounded-full overflow-hidden transition-all duration-300 cursor-pointer"
-                  style={{
-                    width: isActive ? "28px" : "10px",
-                  }}
+                  className="group relative py-2.5 -my-2.5 px-0.5 flex items-center cursor-pointer"
                 >
-                  {/* Background track */}
-                  <span className="absolute inset-0 bg-white/20 group-hover:bg-white/40 transition-colors" />
+                  <span
+                    className="relative block h-1 sm:h-1.5 rounded-full overflow-hidden transition-all duration-300"
+                    style={{
+                      width: isActive ? "28px" : "10px",
+                    }}
+                  >
+                    {/* Background track */}
+                    <span className="absolute inset-0 bg-white/20 group-hover:bg-white/40 transition-colors" />
 
-                  {/* Active animated progress bar fill */}
-                  {isActive && (
-                    <span
-                      className="absolute inset-y-0 left-0 bg-[#ea0044] shadow-[0_0_6px_#ea0044] transition-all"
-                      style={{
-                        width: `${progress}%`,
-                        transition: isPaused ? "none" : "width 50ms linear",
-                      }}
-                    />
-                  )}
+                    {/* Active animated progress bar fill (GPU-composited scaleX) */}
+                    {isActive && (
+                      <span
+                        className="absolute inset-0 bg-[#ea0044] shadow-[0_0_6px_#ea0044] origin-left will-change-transform"
+                        style={{
+                          transform: `scaleX(${progress / 100})`,
+                          transition: isPaused ? "none" : "transform 50ms linear",
+                        }}
+                      />
+                    )}
 
-                  {!isActive && idx < currentIndex && (
-                    <span className="absolute inset-0 bg-white/50" />
-                  )}
+                    {!isActive && idx < currentIndex && (
+                      <span className="absolute inset-0 bg-white/50" />
+                    )}
+                  </span>
                 </button>
               );
             })}
+
           </div>
         )}
       </div>

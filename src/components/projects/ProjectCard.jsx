@@ -67,7 +67,7 @@ export default function ProjectCard({
   // ── SPOTLIGHT HERO CARD (Full Widescreen Cinematic Showcase) ──────────────
   if (isSpotlight) {
     return (
-      <article
+      <div
         role="button"
         tabIndex={0}
         onClick={handleClick}
@@ -145,7 +145,7 @@ export default function ProjectCard({
             )}
           </div>
         </div>
-      </article>
+      </div>
     );
   }
 
@@ -159,7 +159,7 @@ export default function ProjectCard({
   // ── PORTRAIT MOBILE / SHORTS / REELS CARD ──────────────────────────────────
   if (isShort) {
     return (
-      <article
+      <div
         role="button"
         tabIndex={0}
         onClick={handleClick}
@@ -210,21 +210,22 @@ export default function ProjectCard({
 
           {/* Bottom Card Caption */}
           <div className="absolute bottom-2.5 sm:bottom-4 inset-x-2.5 sm:inset-x-4 flex flex-col gap-0.5 sm:gap-1 pointer-events-none">
-            <h4 className="font-display font-bold text-xs sm:text-sm md:text-[15px] lg:text-[16px] text-foreground leading-snug group-hover:text-accent transition-colors line-clamp-1">
+            <h3 className="font-display font-bold text-xs sm:text-sm md:text-[15px] lg:text-[16px] text-foreground leading-snug group-hover:text-accent transition-colors line-clamp-1">
               {project.title}
-            </h4>
+            </h3>
             <p className="text-[10px] sm:text-xs text-muted/80 line-clamp-1">
               {project.subtitle || project.category || "Vertical Short"}
             </p>
           </div>
         </div>
-      </article>
+      </div>
     );
   }
 
+
   // ── STANDARD WIDESCREEN 16:9 CARD ─────────────────────────────────────────
   return (
-    <article
+    <div
       role="button"
       tabIndex={0}
       onClick={handleClick}
@@ -291,6 +292,6 @@ export default function ProjectCard({
           )}
         </div>
       </div>
-    </article>
+    </div>
   );
 }

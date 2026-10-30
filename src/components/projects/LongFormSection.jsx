@@ -12,7 +12,7 @@ export default function LongFormSection({ projects = [], onSelectProject }) {
         <h2 className="font-display font-bold text-xl sm:text-2xl md:text-3xl text-foreground tracking-tight">
           Long-Form <span className="text-accent">Film & Edits</span>
         </h2>
-        <span className="text-xs font-mono text-muted">
+        <span className="text-xs font-mono text-zinc-400">
           [{projects.length} VIDEOS]
         </span>
       </div>

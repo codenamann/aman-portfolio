@@ -82,7 +82,7 @@ export default function ShortsInfiniteMarquee({
             Vertical <span className="text-[#ea0044]">Shorts & Reels</span>
           </h3>
         </div>
-        <span className="text-xs font-mono text-zinc-500">
+        <span className="text-xs font-mono text-zinc-400">
           [{projects.length} REELS]
         </span>
       </div>
