@@ -23,6 +23,7 @@ function ToolIcon({ tool, isHovered }) {
           maskSize: "contain",
           WebkitMaskSize: "contain",
         }}
+        role="img"
         aria-label={tool.name}
       />
     );

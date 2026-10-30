@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ReactLenis } from "lenis/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,8 +8,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
   const lenisRef = useRef(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
+    // Check if device is primarily touch/mobile
+    const isTouch =
+      window.matchMedia("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0;
+
+    if (isTouch) {
+      setIsTouchDevice(true);
+      // Native window scroll will drive ScrollTrigger directly with 120Hz momentum
+      ScrollTrigger.refresh();
+      return;
+    }
+
     const lenis = lenisRef.current?.lenis;
     if (lenis) {
       window.__lenis = lenis;
@@ -21,15 +35,22 @@ export default function SmoothScroll({ children }) {
     }
 
     gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
+    // Restore GSAP lag smoothing to absorb frame drops gracefully
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       if (lenis) {
         lenis.off("scroll", ScrollTrigger.update);
       }
       gsap.ticker.remove(update);
+      window.__lenis = null;
     };
   }, []);
+
+  // On touch/mobile devices, use native GPU-accelerated inertia scrolling
+  if (isTouchDevice) {
+    return <>{children}</>;
+  }
 
   return (
     <ReactLenis
@@ -47,3 +68,4 @@ export default function SmoothScroll({ children }) {
     </ReactLenis>
   );
 }
+

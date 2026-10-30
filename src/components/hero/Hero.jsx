@@ -26,12 +26,12 @@ export default function Hero({
         defaults: { ease: "power2.out" },
       });
 
-      // ── Step 1: HeroFace pure fade in (no scaling/expansion)
-      tl.to("#hero-face-wrapper", {
-        opacity: 1,
-        duration: 0.9,
-        ease: "power2.out",
-      })
+      // ── Step 1: HeroFace smooth visual focus
+      tl.fromTo(
+        "#hero-face-wrapper",
+        { opacity: 0.85, scale: 0.98 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }
+      )
         // ── Step 2: Subheading and CTA fade in smoothly
         .to(
           ".hero-tagline",

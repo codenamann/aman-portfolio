@@ -37,21 +37,25 @@ export default function InfiniteMarquee({
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    const viewport = viewportRef.current;
+    if (!track || !viewport) return;
 
     let animationFrame;
     let lastTime = performance.now();
     let width = 0;
+    let isVisible = false;
 
-    // Measure single-sequence width (track contains 3 identical sequence blocks)
+    // Measure single-sequence width asynchronously to prevent synchronous forced reflow
     const updateWidth = () => {
-      if (track.firstElementChild) {
-        width = track.firstElementChild.getBoundingClientRect().width;
-      }
+      requestAnimationFrame(() => {
+        if (track.firstElementChild) {
+          width = track.firstElementChild.getBoundingClientRect().width;
+        }
+      });
     };
 
     updateWidth();
-    window.addEventListener("resize", updateWidth);
+    window.addEventListener("resize", updateWidth, { passive: true });
 
     // Initial offset based on direction
     let offset = direction === "right" ? -width : 0;
@@ -61,7 +65,8 @@ export default function InfiniteMarquee({
       const delta = (time - lastTime) / 1000;
       lastTime = time;
 
-      if (isPlayingRef.current && !isPaused.current && width > 0) {
+      // Only perform transform updates if visible in viewport and playing
+      if (isVisible && isPlayingRef.current && !isPaused.current && width > 0) {
         if (direction === "left") {
           offset -= speed * delta;
           if (Math.abs(offset) >= width) {
@@ -76,13 +81,34 @@ export default function InfiniteMarquee({
         track.style.transform = `translate3d(${offset}px, 0, 0)`;
       }
 
-      animationFrame = requestAnimationFrame(animate);
+      if (isVisible) {
+        animationFrame = requestAnimationFrame(animate);
+      }
     };
 
-    animationFrame = requestAnimationFrame(animate);
+    // IntersectionObserver: completely stops CPU/GPU loops when marquee is scrolled offscreen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        isVisible = entry?.isIntersecting ?? false;
+
+        if (isVisible) {
+          lastTime = performance.now();
+          if (width === 0) updateWidth();
+          cancelAnimationFrame(animationFrame);
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(animationFrame);
+        }
+      },
+      { rootMargin: "200px 0px" }
+    );
+
+    observer.observe(viewport);
 
     return () => {
       window.removeEventListener("resize", updateWidth);
+      observer.disconnect();
       cancelAnimationFrame(animationFrame);
     };
   }, [direction, speed]);

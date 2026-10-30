@@ -26,7 +26,6 @@ function QuoteAttribution({ author, role, company, avatar }) {
             fill
             sizes="48px"
             className="object-cover"
-            unoptimized={avatar.startsWith("http")}
           />
         </div>
         <div className="flex flex-col">

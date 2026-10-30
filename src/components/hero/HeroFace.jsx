@@ -43,7 +43,7 @@ export default function HeroFace() {
   return (
     <div
       id="hero-face-wrapper"
-      className="absolute top-60 md:top-35 lg:bottom-5 xl:bottom-25 w-80 md:w-80 lg:w-110 xl:w-119 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0"
+      className="absolute top-60 md:top-35 lg:bottom-5 xl:bottom-25 w-80 md:w-80 lg:w-110 xl:w-119 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
     >
       <motion.div
         style={{

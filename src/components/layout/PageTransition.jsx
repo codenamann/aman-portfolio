@@ -63,13 +63,19 @@ function captureOutgoingSnapshot(sourceEl, scrollY) {
   const t0 = performance.now();
   if (!sourceEl) return null;
 
-  // 1. Fixed outer wrapper with physical drop-shadow following the jelly boundary
+  const isMobile =
+    typeof window !== "undefined" &&
+    (window.innerWidth < 768 || window.matchMedia("(pointer: coarse)").matches);
+
+  // 1. Fixed outer wrapper: drop-shadow on desktop; clean high-fps GPU execution on mobile
   const snapshotWrapper = document.createElement("div");
   snapshotWrapper.id = "page-transition-outgoing-snapshot";
   snapshotWrapper.setAttribute("aria-hidden", "true");
   snapshotWrapper.className =
     "fixed inset-0 w-full h-full pointer-events-none select-none z-[99990] overflow-hidden will-change-transform";
-  snapshotWrapper.style.filter = "drop-shadow(0 25px 40px rgba(0, 0, 0, 0.85))";
+  if (!isMobile) {
+    snapshotWrapper.style.filter = "drop-shadow(0 25px 40px rgba(0, 0, 0, 0.85))";
+  }
 
   // 2. Clipped stage layer driven by the dynamic SVG clip-path
   const stage = document.createElement("div");
@@ -368,12 +374,19 @@ export default function PageTransition({ children }) {
 
     activeTimelineRef.current = tl;
 
+    // Responsive transition timing: crisp 0.52s on mobile for high-fps responsiveness; 0.82s cinematic on desktop
+    const isMobileViewport = w < 768;
+    const edgeDuration = isMobileViewport ? 0.52 : 0.82;
+    const centerDuration = isMobileViewport ? 0.55 : 0.84;
+    const settleDuration = isMobileViewport ? 0.16 : 0.24;
+    const settleDelay = isMobileViewport ? 0.56 : 0.88;
+
     // 1. Left and right edges pull upward with swift acceleration
     tl.to(
       edge,
       {
         y: -120,
-        duration: 0.82,
+        duration: edgeDuration,
         ease: "power3.inOut",
         onUpdate: updateClipPath,
       },
@@ -381,17 +394,17 @@ export default function PageTransition({ children }) {
     );
 
     // 2. Center lags behind:
-    // Starts with a brief inertia delay (0.07s), stretching the boundary into a deep liquid belly (>300px lag)
+    // Starts with a brief inertia delay, stretching the boundary into a deep liquid belly (>300px lag)
     // Then snaps upward rapidly and overshoots past -120px to -165px
     tl.to(
       center,
       {
         y: -165,
-        duration: 0.84,
+        duration: centerDuration,
         ease: "power2.inOut",
         onUpdate: updateClipPath,
       },
-      0.07
+      isMobileViewport ? 0.04 : 0.07
     );
 
     // 3. Elastic settling phase:
@@ -400,11 +413,11 @@ export default function PageTransition({ children }) {
       center,
       {
         y: -120,
-        duration: 0.24,
+        duration: settleDuration,
         ease: "sine.out",
         onUpdate: updateClipPath,
       },
-      0.88
+      settleDelay
     );
   }, [resumeScrollAndUnlock, removeActiveSnapshot]);
 

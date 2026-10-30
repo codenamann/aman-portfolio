@@ -1,8 +1,27 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
 export default function CursorBall() {
+  const [isPointerDevice, setIsPointerDevice] = useState(false);
+
+  useEffect(() => {
+    const checkPointer = () => {
+      setIsPointerDevice(
+        window.matchMedia("(pointer: fine)").matches && window.innerWidth >= 1024
+      );
+    };
+    checkPointer();
+    window.addEventListener("resize", checkPointer, { passive: true });
+    return () => window.removeEventListener("resize", checkPointer);
+  }, []);
+
+  if (!isPointerDevice) return null;
+
+  return <ActiveCursorBall />;
+}
+
+function ActiveCursorBall() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -27,20 +46,21 @@ export default function CursorBall() {
       mouseY.set(e.clientY);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
   return (
     <motion.div
-      className="hidden lg:block fixed w-4 h-4 rounded-full bg-accent z-[9999] pointer-events-none mix-blend-exclusion"
+      className="fixed w-4 h-4 rounded-full bg-accent z-[9999] pointer-events-none mix-blend-exclusion"
       style={{
         x: xOffset,
         y: yOffset,
         translateX: "-50%",
         translateY: "-50%",
       }}
-    ></motion.div>
+    />
   );
 }
+

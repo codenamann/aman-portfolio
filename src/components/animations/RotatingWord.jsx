@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import localFont from "next/font/local";
+
+const microphoneCheck = localFont({
+  src: "../../fonts/Microphone-Check.woff2",
+  display: "swap",
+});
 
 export default function RotatingWord({
   words = ["design", "create", "build"],
@@ -31,7 +37,7 @@ export default function RotatingWord({
             transition: { duration: 0.4 },
           }}
           transition={{ duration: 0.5 }}
-          className="absolute font-microphone font-extralight tracking-wide text-accent"
+          className={`absolute ${microphoneCheck.className} font-extralight tracking-wide text-accent`}
         >
           {words[index]}
         </motion.div>
@@ -39,3 +45,4 @@ export default function RotatingWord({
     </div>
   );
 }
+

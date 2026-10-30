@@ -95,11 +95,16 @@ export default async function Home() {
         <FAQCTA faqsData={faqs} profile={profile} />
       </main>
       <Footer profile={profile} />
-      {/* bottom blur  */}
-      <div className="fixed bottom-0 inset-x-0 z-50 w-full h-30 pointer-events-none">
-        <div className="absolute inset-0 backdrop-blur-[2px] [mask-image:linear-gradient(to_bottom,transparent,black)]" />
-        <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_40%,black)]" />
-        <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_70%,black)]" />
+      {/* bottom blur: Desktop multi-tier gradient blur, Mobile lightweight GPU gradient fade */}
+      <div className="fixed bottom-0 inset-x-0 z-50 w-full h-20 sm:h-30 pointer-events-none">
+        {/* Desktop multi-tier blur */}
+        <div className="hidden sm:block absolute inset-0">
+          <div className="absolute inset-0 backdrop-blur-[2px] [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+          <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_40%,black)]" />
+          <div className="absolute inset-0 backdrop-blur-[3px] [mask-image:linear-gradient(to_bottom,transparent_70%,black)]" />
+        </div>
+        {/* Mobile GPU-friendly single-pass gradient */}
+        <div className="sm:hidden absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
       </div>
     </>
   );

@@ -58,12 +58,6 @@ const roboto = localFont({
   display: "swap",
 });
 
-const microphoneCheck = localFont({
-  src: "../fonts/Microphone-Check.woff2",
-  variable: "--font-microphone",
-  display: "swap",
-});
-
 export const metadata = {
   title: siteConfig.title,
   description: siteConfig.description,
@@ -73,7 +67,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${roboto.variable} ${microphoneCheck.variable}`}
+      className={`${spaceGrotesk.variable} ${roboto.variable}`}
     >
       <body className="bg-background text-foreground font-sans antialiased overflow-x-hidden">
         <SmoothScroll>
@@ -83,3 +77,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
