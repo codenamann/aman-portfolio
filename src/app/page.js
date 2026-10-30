@@ -8,6 +8,7 @@ import Testimonials from "@/components/social-proof/Testimonials";
 import FAQCTA from "@/components/faq/FAQCTA";
 import Footer from "@/components/contact/Footer";
 import CursorBall from "@/components/layout/CursorBall";
+import RouteReady from "@/components/layout/RouteReady";
 import { getFeaturedProjects } from "@/services/projects/getFeaturedProjects";
 import { getAllContent } from "@/services/content/getContent";
 
@@ -46,6 +47,7 @@ export default async function Home() {
 
   return (
     <>
+      <RouteReady routePath="/" />
       <CursorBall />
       <Navbar brand={profile} />
       <Hero

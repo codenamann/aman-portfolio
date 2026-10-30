@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import { siteConfig } from "@/data/site";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
+import PageTransition from "@/components/layout/PageTransition";
 
 const spaceGrotesk = localFont({
   src: [
@@ -75,7 +76,9 @@ export default function RootLayout({ children }) {
       className={`${spaceGrotesk.variable} ${roboto.variable} ${microphoneCheck.variable}`}
     >
       <body className="bg-background text-foreground font-sans antialiased overflow-x-hidden">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <PageTransition>{children}</PageTransition>
+        </SmoothScroll>
       </body>
     </html>
   );

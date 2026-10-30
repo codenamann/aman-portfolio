@@ -12,6 +12,7 @@ export default function SmoothScroll({ children }) {
   useEffect(() => {
     const lenis = lenisRef.current?.lenis;
     if (lenis) {
+      window.__lenis = lenis;
       lenis.on("scroll", ScrollTrigger.update);
     }
 

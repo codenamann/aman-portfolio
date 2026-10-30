@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import ProjectsArchive from "@/components/projects/ProjectsArchive";
 import Footer from "@/components/contact/Footer";
+import RouteReady from "@/components/layout/RouteReady";
 import { getProjects } from "@/services/projects/getProjects";
 import { getFeaturedShowcase } from "@/services/projects/getFeaturedShowcase";
 import { getContent } from "@/services/content/getContent";
@@ -32,6 +33,7 @@ export default async function ProjectsPage() {
 
   return (
     <>
+      <RouteReady routePath="/projects" />
       <Navbar brand={profile} />
       <main>
         <ProjectsArchive
